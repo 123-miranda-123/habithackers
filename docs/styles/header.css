@@ -1,0 +1,97 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url(../fonts/Poppins/Poppins-Bold.ttf) format('truetype');
+  }
+@font-face {
+    font-family: 'Lexend';
+    src: url(../fonts/Lexend/Lexend-VariableFont_wght.ttf);
+  }
+@font-face {
+  font-family: 'Lovelo';
+  src: url(../fonts/Lovelo/LoveloBlack.otf);
+}
+
+  
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+      height: 100%;
+      width: 100%;
+      background-color: white;
+    }
+  
+  nav {
+    font-family: 'Poppins';
+  }
+  
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 5px 0;
+    background-color: #57a4fe;
+    border-bottom: solid white 1px;
+  }
+  
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+  
+  .logo {
+    height: 70px;
+    align-items: center;
+  }
+  
+  .auth-buttons {
+    font-family: 'Lexend';
+    display: flex;
+    gap: 15px;
+  }
+  
+  #login{
+    border: 1px solid white;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: #57a4fe;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  #login:hover{
+    background-color: #7abaff;
+  }
+  
+  #register{
+    border: 1px solid white;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: white;
+    color: #57a4fe;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  #register:hover{
+    background-color: rgb(242, 242, 242);
+    border: 1px solid rgb(242, 242, 242);
+  }
+
+  #help{
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+  }
