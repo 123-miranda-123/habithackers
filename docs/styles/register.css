@@ -1,0 +1,58 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url(../fonts/Poppins/Poppins-Bold.ttf) format('truetype');
+  }
+  @font-face {
+    font-family: 'Lexend';
+    src: url(../fonts/Lexend/Lexend-VariableFont_wght.ttf);
+  }
+
+  body {
+    font-family: 'Lexend';
+    background-color: #f5fdff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.get-started-container {
+    text-align: center;
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #57a4fe;
+}
+
+p {
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.team-options button {
+    background-color: #57a4fe;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin: 10px;
+    width: 200px;
+}
+
+.team-options button a {
+    color: white;
+    text-decoration: none;
+}
+
+.team-options button:hover {
+    background-color: #4d94e0;
+}
