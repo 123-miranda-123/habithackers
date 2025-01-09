@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Team - Habit Hub</title>
+    <link href="../styles/header.css" rel="stylesheet" type="text/css"/>
+    <link href="../styles/register.css" rel="stylesheet" type="text/css"/>
+    <link rel="icon" href="../../images/icon.png" type="image/png">
+</head>
+<body>
+    <form action="/create-team" method="POST">
+        <input type="text" name="teamName" placeholder="Enter team name" required>
+        <input type="text" name="teamDescription" placeholder="Enter team description" required>
+        <input type="hidden" name="userId" value="user-id-here"> <!-- Dynamically insert the userId -->
+        <button type="submit">Create Team</button>
+      </form>      
+</body>
+</html>
