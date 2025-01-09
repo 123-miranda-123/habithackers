@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Habit Hub</title>
+    <link href="../styles/header.css" rel="stylesheet" type="text/css"/>
+    <link href="../styles/login.css" rel="stylesheet" type="text/css">
+    <link rel="icon" href="../../images/icon.png" type="image/png">
+</head>
+<body>
+    <nav class = "header">
+        <div class="header-container">
+        <a href = "index.html">
+            <img src="../../images/Banner 2.png" alt="Habit Hub Logo" class = "logo">
+        </a>
+            <div class = "auth-buttons">
+                <a href="register.html" id = "register">Get Started</a>
+                <a href="login.html" id = "login">Sign In</a>
+            </div>
+        </div>
+    </nav>
+    <div class="signin-container">
+        <h2>Sign In</h2>
+        <form action="login-action.php" method="POST">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="remember-me">
+                <label>
+                    <input type="checkbox" name="remember-me"> Remember Me
+                </label>
+            </div>
+            
+            <div class="submit-btn">
+                <button type="submit">Sign In</button>
+            </div>
+
+            <div class="signup-link">
+                <p>Don't have an account? <a href="register.html">Sign up here</a></p>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
