@@ -24,7 +24,7 @@ body {
 }
 
 /* Sign-in container */
-.signin-container {
+.container {
     background-color: #fff;
     padding: 30px;
     border-radius: 10px;
@@ -35,10 +35,31 @@ body {
 }
 
 /* Title */
-.signin-container h2 {
+.container h2 {
     margin-bottom: 20px;
     font-size: 1.8em;
     color: #333;
+}
+
+.registration-form {
+    display: flex;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+#role {
+    font-family: Poppins;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #333;
+    cursor: pointer;
 }
 
 /* Input group styling */
@@ -89,16 +110,16 @@ body {
 }
 
 /* Sign-up link */
-.signup-link p {
+.signlink p {
     margin-top: 15px;
     font-size: 1em;
 }
 
-.signup-link a {
+.signlink a {
     color: #57a4fe;
     text-decoration: none;
 }
 
-.signup-link a:hover {
+.signlink a:hover {
     text-decoration: underline;
 }

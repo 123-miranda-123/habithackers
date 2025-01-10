@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Get Started - Habit Hub</title>
     <link href="../styles/header.css" rel="stylesheet" type="text/css"/>
-    <link href="../styles/register.css" rel="stylesheet" type="text/css">
+    <link href="../styles/login.css" rel="stylesheet" type="text/css">
     <link rel="icon" href="images/icon.png" type="image/png">
 </head>
 <body>
     <nav class="header">
         <div class="header-container">
             <a href="index.html">
-                <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
+                <img src="../../images/Banner 2.png" alt="Habit Hub Logo" class="logo">
             </a>
             <div class="auth-buttons">
                 <a href="help.html" id="help">Help</a>
@@ -21,37 +21,42 @@
             </div>
         </div>
     </nav>
-    <section class="registration-form">
+    <section class="container">
         <h2>Register for Habit Hub</h2>
         <form action="docs/javascript/register.php" method="POST">
             <div class="input-group">
-                <label for="name">Full Name:</label>
+                <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" required>
             </div>
 
             <div class="input-group">
-                <label for="email">Email:</label>
+                <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
             </div>
 
             <div class="input-group">
-                <label for="password">Password:</label>
+                <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
 
             <div class="input-group">
                 <label for="role">Account Type</label>
-                <select name = "role">
+                <select name = "role" id = "role" required>
+                    <option value="" disabled selected>Select Role</option>
                     <option value="member">Team Member</option>
                     <option value="captain">Team Captain</option>
                     <option value="admin">Admin</option>
                 </select>
             </div>
-
-            <button type="submit">Register</button>
+            
+            <div class ="submit-btn">
+                <button id = "submit" type="submit">Register</button>
+            </div>
         </form>
         
-        <p>Already have an account? <a href="login.html">Sign In</a></p>
+        <div class="signlink">
+            <p>Already have an account? <a href="login.html">Sign In</a></p>
+        </div>
     </section>
 </body>
 </html>
