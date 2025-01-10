@@ -68,3 +68,8 @@ p {
     max-width: 400px;
     text-align: center;
 }
+
+a {
+    text-decoration: none;
+    color:#57a4fe;
+}
