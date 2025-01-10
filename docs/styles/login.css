@@ -2,6 +2,17 @@
     font-family: 'Poppins';
     src: url(../fonts/Poppins/Poppins-Bold.ttf) format('truetype');
   }
+
+  @font-face {
+    font-family: 'Poppins-SemiBold';
+    src: url(../../fonts/Poppins/Poppins-SemiBold.ttf) format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'Poppins-Regular';
+    src: url(../../fonts/Poppins/Poppins-Regular.ttf) format('truetype');
+  }
+
   @font-face {
     font-family: 'Lexend';
     src: url(../fonts/Lexend/Lexend-VariableFont_wght.ttf);
@@ -13,9 +24,8 @@
     box-sizing: border-box;
 }
 
-/* Body styles */
 body {
-    font-family: 'Poppins';
+    font-family: 'Poppins-Semibold';
     background-color: #f4f7fc;
     display: flex;
     justify-content: center;
@@ -23,7 +33,6 @@ body {
     height: 100vh;
 }
 
-/* Sign-in container */
 .container {
     background-color: #fff;
     padding: 30px;
@@ -34,7 +43,6 @@ body {
     text-align: center;
 }
 
-/* Title */
 .container h2 {
     margin-bottom: 20px;
     font-size: 1.8em;
@@ -62,7 +70,6 @@ body {
     cursor: pointer;
 }
 
-/* Input group styling */
 .input-group {
     margin-bottom: 15px;
     text-align: left;
@@ -83,7 +90,6 @@ body {
     color: #333;
 }
 
-/* Remember me checkbox */
 .remember-me {
     text-align: left;
     margin-bottom: 20px;
@@ -93,7 +99,6 @@ body {
     margin-right: 5px;
 }
 
-/* Submit button */
 .submit-btn button {
     font-family: Lexend;
     background-color: #57a4fe;
@@ -109,7 +114,6 @@ body {
     background-color: #4d94e0;
 }
 
-/* Sign-up link */
 .signlink p {
     margin-top: 15px;
     font-size: 1em;
