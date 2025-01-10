@@ -1,5 +1,5 @@
-document.getElementById('login').onclick = function login() {
-    let x = document.getElementById("username").value;
-    document.getElementById("login").innerHTML = x;
+document.getElementById('submit').onclick = function login() {
+    x = document.getElementById("username").value;
+    document.getElementById("login").innerText = x;
 }
 
