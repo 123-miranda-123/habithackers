@@ -60,7 +60,7 @@
     gap: 15px;
   }
   
-  #login{
+  #login #logout{
     border: 1px solid white;
     padding: 15px;
     border-radius: 4px;
@@ -70,11 +70,11 @@
     cursor: pointer;
   }
   
-  #login:hover{
+  #login:hover #logout:hover{
     background-color: #7abaff;
   }
   
-  #register{
+  #register {
     border: 1px solid white;
     padding: 15px;
     border-radius: 4px;
