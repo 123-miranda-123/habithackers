@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help - Habit Hub</title>
+    <title>User Dashboard - Habit Hub</title>
     <link href="styles/header.css" rel="stylesheet" type="text/css"/>
     <link href="styles/index.css" rel="stylesheet" type="text/css"/>
     <link href="styles/footer.css" rel="stylesheet" type="text/css"/>
     <link rel="icon" href="images/icon.png" type="image/png">
-
 </head>
 <body>
     <nav class="header">
@@ -18,12 +17,9 @@
             </a>
             <div class="auth-buttons">
                 <a href="help.html" id="help">Help</a>
-                <a href="register.php" id="register">Get Started</a>
-                <a href="login.php" id="login">Sign In</a>
+                <a href="logout.php" id="logout">Logout</a>
             </div>
         </div>
     </nav>
-    
-    
 </body>
 </html>

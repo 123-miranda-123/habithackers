@@ -1,4 +1,3 @@
-<!-- filepath: /Applications/MAMP/htdocs/habithub/register.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +17,7 @@
             <div class="auth-buttons">
                 <a href="help.html" id="help">Help</a>
                 <a href="register.php" id="register">Get Started</a>
-                <a href="login.html" id="login">Sign In</a>
+                <a href="login.php" id="login">Sign In</a>
             </div>
         </div>
     </nav>
@@ -32,7 +31,6 @@
         }
         ?>
         </div>
-
         <form action="register.php" method="POST">
             <div class="input-group">
                 <label for="name">Full Name</label>
@@ -118,30 +116,36 @@ if (isset($_POST["submit"])) {
             die("Connection failed: " . mysqli_connect_error());
         }
 
-         // Check if email already exists
-        $sql = "SELECT * FROM users WHERE email = '$email'";
-        $result = mysqli_query($conn, $sql);
-        $rowCount = mysqli_num_rows($result);
+        // Check if email already exists
+        $sql = "SELECT * FROM users WHERE email = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rowCount = $result->num_rows;
+         
         if ($rowCount > 0) {
             header("Location: register.php?message=" . urlencode("Email already exists."));
             exit();
-        }
-            // Insert data into database
-            $sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
-            $stmt = mysqli_stmt_init($conn);
-            if (mysqli_stmt_prepare($stmt, $sql)) {
-                mysqli_stmt_bind_param($stmt, "ssss", $name, $email, $passwordHash, $role); // Bind values into the SQL command
-                if (mysqli_stmt_execute($stmt)) { // Execute the statement
-                    header("Location: register.php?message=" . urlencode("Registration successful!"));
-                    exit();
-                } else {
-                    header("Location: register.php?message=" . urlencode("Error executing query: " . mysqli_stmt_error($stmt)));
-                    exit();
-                }
+         }
+         
+        // Insert data into database
+        $sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param("ssss", $name, $email, $passwordHash, $role); // Bind values into the SQL command
+            if ($stmt->execute()) { // Execute the statement
+                header("Location: register.php?message=" . urlencode("Registration successful!"));
+                exit();
             } else {
-                header("Location: register.php?message=" . urlencode("Error preparing statement: " . mysqli_error($conn)));
+                header("Location: register.php?message=" . urlencode("Error executing query: " . $stmt->error));
                 exit();
             }
+        } else {
+            header("Location: register.php?message=" . urlencode("Error preparing statement: " . $conn->error));
+            exit();
+        }
+         
         }
     }
 }

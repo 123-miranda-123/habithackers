@@ -101,15 +101,6 @@ body {
     margin-bottom: 10px;
 }
 
-.remember-me {
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-.remember-me input {
-    margin-right: 5px;
-}
-
 .submit-btn button {
     font-family: Lexend;
     background-color: #57a4fe;
