@@ -1,21 +1,26 @@
 @font-face {
     font-family: 'Poppins';
-    src: url(../fonts/Poppins/Poppins-Bold.ttf) format('truetype');
+    src: url(fonts/Poppins/Poppins-Bold.ttf) format('truetype');
   }
 
   @font-face {
     font-family: 'Poppins-SemiBold';
-    src: url(../../fonts/Poppins/Poppins-SemiBold.ttf) format('truetype');
+    src: url(fonts/Poppins/Poppins-SemiBold.ttf) format('truetype');
   }
   
   @font-face {
     font-family: 'Poppins-Regular';
-    src: url(../../fonts/Poppins/Poppins-Regular.ttf) format('truetype');
+    src: url(fonts/Poppins/Poppins-Regular.ttf) format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Poppins-Italic';
+    src: url(fonts/Poppins/Poppins-Italic.ttf) format('truetype');
   }
 
   @font-face {
     font-family: 'Lexend';
-    src: url(../fonts/Lexend/Lexend-VariableFont_wght.ttf);
+    src: url(fonts/Lexend/Lexend-VariableFont_wght.ttf);
   }
 
 * {
@@ -61,7 +66,7 @@ body {
 }
 
 #role {
-    font-family: Poppins;
+    font-family: Poppins-Regular;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -88,6 +93,12 @@ body {
     border-radius: 5px;
     font-size: 1em;
     color: #333;
+}
+
+#message {
+    font-family: Poppins-Semibold;
+    color: #57a4fe;
+    margin-bottom: 10px;
 }
 
 .remember-me {
