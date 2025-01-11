@@ -6,14 +6,14 @@
     <title>Get Started - Habit Hub</title>
     <link href="../styles/header.css" rel="stylesheet" type="text/css"/>
     <link href="../styles/login.css" rel="stylesheet" type="text/css">
-    <link rel="icon" href="images/icon.png" type="image/png">
+    <link rel="icon" href="../../images/icon.png" type="image/png">
     <link href = "../javascript/register.php"/>
 </head>
 <body>
     <nav class="header">
         <div class="header-container">
             <a href="index.html">
-                <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
+                <img src="../../images/Banner 2.png" alt="Habit Hub Logo" class="logo">
             </a>
             <div class="auth-buttons">
                 <a href="help.html" id="help">Help</a>
@@ -24,7 +24,7 @@
     </nav>
     <section class="container">
         <h2>Register for Habit Hub</h2>
-        <form action="docs/php/register.php" method="get">
+        <form action="../php/register.php" method="POST">
             <div class="input-group">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" required>
@@ -38,6 +38,12 @@
             <div class="input-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
+            </div>
+            
+
+            <div class="input-group">
+                <label for="password">Repeat Password</label>
+                <input type="password" id="password" name="repeatPassword" required>
             </div>
 
             <div class="input-group">
