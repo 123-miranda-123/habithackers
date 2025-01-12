@@ -1,3 +1,11 @@
+<?php
+session_start();
+require_once "database.php";
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $connection->connect_error);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,16 +40,30 @@
                 <th>Role</th>
                 <th>Actions</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td>John Doe</td>
-                <td>doe@gmail.com</td>
-                <td>Team Captain</td>
+            <?php
+
+            $sql = "SELECT * FROM users";
+            $result = $conn->query($sql);
+
+            if (! $result) {
+                echo "Invalid query: " . $connection->error;
+                exit();
+            }
+
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>
+                <td>" . $row["id"] . "</td>
+                <td>" . $row["name"] . "</td>
+                <td>" . $row["email"] . "</td>
+                <td>" . $row["role"] . "</td>
                 <td>
-                    <button>Edit</button>
-                    <button>Delete</button>
+                    <button id = 'edit'>Edit</button>
+                    <button id = 'delete'>Delete</button>
                 </td>
-            </tr>
+            </tr>";
+            }
+            
+            ?>
         </table>
 
 
@@ -56,10 +78,9 @@
             </tr>
             <tr>
                 <td>1</td>
-                <td>Haabit Hackers</td>
+                <td>Habit Hackers</td>
                 <td>John Doe</td>
                 <td>Team Captain</td>
-                <td>Actions</td>
                 <td>
                     <button>Edit</button>
                     <button>Delete</button>
