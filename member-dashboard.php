@@ -21,7 +21,7 @@
             </div>
         </div>
     </nav>
-    section class = "container">
+    <section class = "container">
         <h1>Member Dashboard</h1>
         <h2>Users</h2>
         <table class = "users-table">
