@@ -27,7 +27,7 @@ if (isset($_SESSION["user_role"])) {
 <body>
     <nav class="header">
         <div class="header-container">
-            <a href="index.html">
+            <a href="index.php">
                 <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
             </a>
             <div class="auth-buttons">
