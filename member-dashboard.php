@@ -67,8 +67,7 @@ if ($result->num_rows > 0) {
 <section class="container">
     <div id = "title">
         <h1>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h1>
-
-    <h2>Your Team: <?php echo htmlspecialchars($team_name); ?></p>
+        <h1>Team <?php echo htmlspecialchars($team_name); ?></p>
     </div>
 
     <h3>Your Habit Logs</h3>
@@ -81,6 +80,64 @@ if ($result->num_rows > 0) {
             <?php endforeach; ?>
         </ul>
     <?php endif; ?>
+    
+    <button class="open-btn" onclick="openPopup()">Open Popup</button>
+
+    <div id="overlay" class="overlay">
+    <div class="popup">
+    <form action="create-habit.php" method="POST">
+          <h2>Create a New Habit</h2>
+          <div class="input-group">
+                <select name="habit-type" id="habit-type" class = "dropdown" required>
+                    <option value="" disabled selected>Select Habit Type</option>
+                    <option value="exercise">Exercise</option>
+                    <option value="reading">Reading</option>
+                    <option value="journaling">Journaling</option>
+                    <option value="meditation">Meditation</option>
+                    <option value="hydration">Hydration</option>
+                    <option value="sleep">Sleep</option>
+                    <option value="project">Project</option>
+                    <option value="skill">Skill Learning</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="date">Start Date</label>
+                <input type="text" id="date" name="date" placeholder="dd/mm/yyyy" required>
+            </div>
+
+            <div class="input-group">
+                <label for="number">Frequency</label>
+                <input type="number" id="number" name="number" required>
+            </div>
+
+            <div class="input-group">
+                <select name="habit-type" id="habit-type" class = "dropdown" required>
+                    <option value="" disabled selected>Select Time Interval</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+
+            <div>
+              <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+              <button class="submit-btn">Submit</button>
+            </div>
+
+
+  <script>
+    function openPopup() {
+      document.getElementById('overlay').style.display = 'flex';
+      document.getElementById('main-content').classList.add('greyed-out');
+    }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('main-content').classList.remove('greyed-out');
+    }
+  </script>
+</body>
+</html>
 
 </section>
 </body>

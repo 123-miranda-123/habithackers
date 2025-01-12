@@ -37,7 +37,7 @@
       margin-top: 0;
     }
 
-    .dropdown, .input-box {
+    .dropdown, .input-group {
       width: 100%;
       margin: 10px 0;
       padding: 8px;
@@ -112,23 +112,45 @@
 
   <div id="overlay" class="overlay">
     <div class="popup">
-      <h2>Welcome</h2>
-      <select class="dropdown">
-        <option value="">Select Your Goal</option>
-        <option value="option1">Exercise</option>
-        <option value="option2">Team building</option>
-        <option value="option3">Project planning</option>
-      </select>
-      <div>Enter the date: </div>
-      <input type="text" class="input-box" placeholder="dd/mm/yyyy">
-      <div>Log your progress: </div>
-      <input type="text" class="input-box" placeholder="minutes/hours/units">
-      <div>
-        <button class="cancel-btn" onclick="closePopup()">Cancel</button>
-        <button class="submit-btn">Submit</button>
-      </div>
-    </div>
-  </div>
+    <form action="create-habit.php" method="POST">
+          <h2>Create a New Habit</h2>
+          <div class="input-group">
+                <select name="habit-type" id="habit-type" class = "dropdown" required>
+                    <option value="" disabled selected>Select Habit Type</option>
+                    <option value="exercise">Exercise</option>
+                    <option value="reading">Reading</option>
+                    <option value="journaling">Journaling</option>
+                    <option value="meditation">Meditation</option>
+                    <option value="hydration">Hydration</option>
+                    <option value="sleep">Sleep</option>
+                    <option value="project">Project</option>
+                    <option value="skill">Skill Learning</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="date">Start Date</label>
+                <input type="text" id="date" name="date" placeholder="dd/mm/yyyy" required>
+            </div>
+
+            <div class="input-group">
+                <label for="number">Frequency</label>
+                <input type="number" id="number" name="number" required>
+            </div>
+
+            <div class="input-group">
+                <select name="habit-type" id="habit-type" class = "dropdown" required>
+                    <option value="" disabled selected>Select Time Interval</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+
+            <div>
+              <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+              <button class="submit-btn">Submit</button>
+            </div>
+
 
   <script>
     function openPopup() {
