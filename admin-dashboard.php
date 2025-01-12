@@ -32,6 +32,7 @@ if ($conn->connect_error) {
     <section class = "container">
         <h1>Admin Dashboard</h1>
         <h2>Users</h2>
+        <button class = "add"><a href = "new-user.php">+ New User</a></button>
         <table class = "users-table">
             <tr>
                 <th>User ID</th>
@@ -57,7 +58,7 @@ if ($conn->connect_error) {
                 <td>" . $row["email"] . "</td>
                 <td>" . $row["role"] . "</td>
                 <td>
-                    <button id = 'edit'>Edit</button>
+                    <button id = 'edit'><a href = edit-user.php>Edit</a></button>
                     <button id = 'delete'>Delete</button>
                 </td>
             </tr>";
