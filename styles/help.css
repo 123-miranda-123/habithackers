@@ -1,0 +1,64 @@
+@font-face {
+    font-family: 'Poppins-Bold';
+    src: url(../../fonts/Poppins/Poppins-Bold.ttf) format('truetype');
+}
+  
+@font-face {
+    font-family: 'Poppins-SemiBold';
+    src: url(../../fonts/Poppins/Poppins-SemiBold.ttf) format('truetype');
+}
+  
+@font-face {
+    font-family: 'Poppins-Regular';
+    src: url(../../fonts/Poppins/Poppins-Regular.ttf) format('truetype');
+}
+  
+@font-face {
+    font-family: 'Lexend';
+    src: url(../../fonts/Lexend/Lexend-VariableFont_wght.ttf);
+}
+  
+  
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+  
+html {
+      height: 100%;
+      width: 100%;
+      background-color: white;
+      min-height: 100vh;
+      height: 100%;
+}
+  
+#title {
+    font-family: 'Poppins';
+    font-size: 3em;
+    margin-bottom: 50px;
+}
+
+.help {
+    margin:  200px 250px;
+    color: black;
+    text-align:left;
+}
+
+.help-content {
+    font-size: 1em;
+    color: black;
+    text-align: left;
+}
+
+
+h1 {
+    font-family: 'Poppins-Bold';
+}
+
+h2 {
+    font-family: 'Poppins-SemiBold';
+}
+p {
+    font-family: 'Poppins-Regular';
+}
