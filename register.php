@@ -5,10 +5,10 @@ if (isset($_SESSION["user_role"])) {
         header("Location: admin-dashboard.php");
         exit();
     } else if ($_SESSION["user_role"] === "captain") {
-        header("Location: captain-dashboard.php");
+        header("Location: create-team.php");
         exit();
     } else if ($_SESSION["user_role"] === "member") {
-        header("Location: member-dashboard.php");
+        header("Location: join-team.php");
         exit();
     }
 }
@@ -27,7 +27,7 @@ if (isset($_SESSION["user_role"])) {
 <body>
     <nav class="header">
         <div class="header-container">
-            <a href="index.html">
+            <a href="index.php">
                 <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
             </a>
             <div class="auth-buttons">
