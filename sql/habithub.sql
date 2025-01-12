@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 12, 2025 at 04:11 AM
+-- Generation Time: Jan 12, 2025 at 09:02 PM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -66,6 +66,32 @@ CREATE TABLE `habit_logs` (
   `progress` int NOT NULL,
   `log_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `habit_types`
+--
+
+CREATE TABLE `habit_types` (
+  `id` int NOT NULL,
+  `habit_name` varchar(50) NOT NULL,
+  `unit` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `habit_types`
+--
+
+INSERT INTO `habit_types` (`id`, `habit_name`, `unit`) VALUES
+(1, 'Exercise', 'Minutes'),
+(2, 'Reading', 'Pages'),
+(3, 'Journaling', 'Entries'),
+(4, 'Meditation', 'Minutes'),
+(5, 'Hydration', 'Cups'),
+(6, 'Sleep', 'Hours'),
+(7, 'Project', 'Hours'),
+(8, 'Skill Learning', 'Hours');
 
 -- --------------------------------------------------------
 
@@ -152,7 +178,9 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
 (1, 'Miranda Wang', 'miranda@gmail.com', '$2y$10$7y4MsnadopPDC233nC5YSeu9y5.sf99LmBprxtOLa6HIisKOrX.Tm', 'admin'),
 (2, 'Team Captain', 'captain@gmail.com', '$2y$10$UG2nzt0UGiEhaKTbOY6JGOq/JdLFdrjSeVe6157aPcWS3W5PouPUO', 'captain'),
-(3, 'Real Member', 'member@gmail.com', '$2y$10$44ZnixnHA5y.D0Pq8/nYE.Jz8f7HfjpRPvvA9qjAiY99b9/djvQyy', 'member');
+(3, 'Real Member', 'member@gmail.com', '$2y$10$44ZnixnHA5y.D0Pq8/nYE.Jz8f7HfjpRPvvA9qjAiY99b9/djvQyy', 'member'),
+(4, 'member2', 'member2@gmail.com', '$2y$10$cNguV76ltoNNmVCd4Xte0OjVwHfSZ0v4VaHGO8vtJssUvJutmKi5i', 'member'),
+(5, 'member3', 'member3@gmail.com', '$2y$10$xjq58ma/IYbTVHZQetrIx.I7fH0xbjP8ipGeXjzSVb9t22c0PpoQ6', 'member');
 
 --
 -- Indexes for dumped tables
@@ -183,6 +211,12 @@ ALTER TABLE `habit_logs`
   ADD KEY `habit_id` (`habit_id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `team_id` (`team_id`);
+
+--
+-- Indexes for table `habit_types`
+--
+ALTER TABLE `habit_types`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `notifications`
@@ -242,6 +276,12 @@ ALTER TABLE `habit_logs`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `habit_types`
+--
+ALTER TABLE `habit_types`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
@@ -269,7 +309,7 @@ ALTER TABLE `team_members`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
