@@ -21,5 +21,23 @@
             </div>
         </div>
     </nav>
+    section class = "container">
+        <h1>Member Dashboard</h1>
+        <h2>Users</h2>
+        <table class = "users-table">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>John Doe</td>
+                <td>doe@gmail.com</td>
+                <td>Team Captain</td>
+                <td>Actions</td>
+            </tr>
+        </table>
+    </section>
 </body>
 </html>
