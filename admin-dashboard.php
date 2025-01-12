@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Habit Hub</title>
     <link href="styles/header.css" rel="stylesheet" type="text/css"/>
-    <link href="styles/dashboard.css" rel="stylesheet" type="text/css"/>
-    <link href="styles/footer.css" rel="stylesheet" type="text/css"/>
+    <link href="styles/manage-dashboard.css" rel="stylesheet" type="text/css"/>
     <link rel="icon" href="images/icon.png" type="image/png">
-    <link href = "php/register.php" type = "php"/>
 </head>
 <body>
     <nav class="header">

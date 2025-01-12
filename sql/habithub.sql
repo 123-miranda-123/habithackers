@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 12, 2025 at 01:58 AM
+-- Generation Time: Jan 12, 2025 at 04:11 AM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -89,7 +89,26 @@ CREATE TABLE `notifications` (
 CREATE TABLE `teams` (
   `id` int NOT NULL,
   `name` varchar(255) NOT NULL,
-  `created_by` int NOT NULL
+  `captain_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `teams`
+--
+
+INSERT INTO `teams` (`id`, `name`, `captain_id`) VALUES
+(1, 'habithackers', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `team_goals`
+--
+
+CREATE TABLE `team_goals` (
+  `id` int NOT NULL,
+  `team_id` int NOT NULL,
+  `goal` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -104,6 +123,13 @@ CREATE TABLE `team_members` (
   `team_id` int NOT NULL,
   `role` enum('Member','Captain') DEFAULT 'Member'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `team_members`
+--
+
+INSERT INTO `team_members` (`id`, `user_id`, `team_id`, `role`) VALUES
+(1, 3, 1, 'Member');
 
 -- --------------------------------------------------------
 
@@ -124,7 +150,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
-(1, 'Miranda Wang', 'miranda@gmail.com', '$2y$10$7y4MsnadopPDC233nC5YSeu9y5.sf99LmBprxtOLa6HIisKOrX.Tm', 'admin');
+(1, 'Miranda Wang', 'miranda@gmail.com', '$2y$10$7y4MsnadopPDC233nC5YSeu9y5.sf99LmBprxtOLa6HIisKOrX.Tm', 'admin'),
+(2, 'Team Captain', 'captain@gmail.com', '$2y$10$UG2nzt0UGiEhaKTbOY6JGOq/JdLFdrjSeVe6157aPcWS3W5PouPUO', 'captain'),
+(3, 'Real Member', 'member@gmail.com', '$2y$10$44ZnixnHA5y.D0Pq8/nYE.Jz8f7HfjpRPvvA9qjAiY99b9/djvQyy', 'member');
 
 --
 -- Indexes for dumped tables
@@ -168,7 +196,14 @@ ALTER TABLE `notifications`
 --
 ALTER TABLE `teams`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `created_by` (`created_by`);
+  ADD KEY `captain_id` (`captain_id`);
+
+--
+-- Indexes for table `team_goals`
+--
+ALTER TABLE `team_goals`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `team_id` (`team_id`);
 
 --
 -- Indexes for table `team_members`
@@ -216,19 +251,25 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `team_goals`
+--
+ALTER TABLE `team_goals`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `team_members`
 --
 ALTER TABLE `team_members`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -267,7 +308,13 @@ ALTER TABLE `notifications`
 -- Constraints for table `teams`
 --
 ALTER TABLE `teams`
-  ADD CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`captain_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `team_goals`
+--
+ALTER TABLE `team_goals`
+  ADD CONSTRAINT `team_goals_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `team_members`
