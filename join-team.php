@@ -1,6 +1,6 @@
 <?php
+require_once "database.php";
 session_start();
-
 // Assume the user has successfully logged in and their user ID is saved in session
 $user_id = $_SESSION['user_id'];
 
