@@ -28,7 +28,7 @@ require_once "database.php";
         </div>
 
         <div class = "input-group">
-            <label for="name" >Name:</label>
+            <label for="name" >Full Name:</label>
             <input type="text" id="name" name="name" required>
         </div>
 

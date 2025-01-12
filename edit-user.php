@@ -1,34 +1,5 @@
 <?php
     require_once "database.php";
-
-    if (isset($_POST["submit"])) {
-        $name = $_POST["name"];
-        $email = $_POST["email"];
-        $role = $_POST["role"];
-        $user_id = $_GET["id"];
-
-        $sql = "UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssi", $name, $email, $role, $user_id);
-        if ($stmt->execute()) {
-            header("Location: admin-dashboard.php?message=" . urlencode("User updated successfully."));
-            exit();
-        } else {
-            header("Location: admin-dashboard.php?message=" . urlencode("Error updating user: " . $stmt->error));
-            exit();
-        }
-    } else {
-        $user_id = $_GET["id"];
-        $sql = "SELECT * FROM users WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
-        $name = $user["name"];
-        $email = $user["email"];
-        $role = $user["role"];
-    }
 ?>
 
 <!DOCTYPE html>
@@ -46,6 +17,7 @@
 
 <form action="edit-user.php" method="POST">
             <h2>Edit User</h2>
+            <input type = "hidden" name = "id" value = "<?php echo $id; ?>">
             <div class="input-group">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" value = "<?php echo $name; ?>" required>
@@ -68,8 +40,66 @@
             
             <div class="submit-btn">
                 <button id="submit" type="submit" name="submit">Register</button>
+                <button id = "cancel" type="cancel" name = "cancel">Cancel</button>
             </div>
 </form>
 </section>
 </body>
 </html>
+
+<?php
+
+$id = "";
+$name = "";
+$email = "";
+$role = "";
+
+if (isset($_POST["cancel"])) {
+    header("Location: admin-dashboard.php");
+    exit();
+}
+
+
+if (isset($_POST["submit"])) {
+
+    if (!isset($_GET["id"])) {
+        header("Location: admin-dashboard.php");
+        exit();
+    }
+    $id = $_GET["id"];
+
+    $sql = "SELECT * FROM users WHERE id = $id";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+
+    if ($row) {
+        header("Location: admin-dashboard.php");
+        exit();
+    }
+
+    $name = $row["name"];
+    $email = $row["email"];
+    $role = $row["role"];
+
+} else {
+    $id = $_POST["id"];
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $role = $_POST["role"];
+
+    do {
+
+        $sql = "UPDATE users SET name = '$name', email = '$email', role = '$role' WHERE id = $id";
+    
+        $result = $conn->query($sql);
+        
+        if (!$result) {
+            header("Location: edit-user.php?message=" . urlencode("Error updating user: " . $conn->error));
+            exit();
+        }
+        header("Location: admin-dashboard.php?message=" . urlencode("User updated successfully!"));
+        exit();
+
+    } while (false);
+}
+?>

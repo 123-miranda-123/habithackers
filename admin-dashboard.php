@@ -83,7 +83,7 @@ if ($conn->connect_error) {
                 <td>John Doe</td>
                 <td>Team Captain</td>
                 <td>
-                    <button>Edit</button>
+                    <button a href =>Edit</button>
                     <button>Delete</button>
                 </td>
             </tr>
