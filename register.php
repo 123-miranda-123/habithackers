@@ -72,9 +72,9 @@ if (isset($_SESSION["user_role"])) {
                 <label for="role">Account Type</label>
                 <select name="role" id="role" required>
                     <option value="" disabled selected>Select Role</option>
-                    <option value="member">Team Member</option>
-                    <option value="captain">Team Captain</option>
-                    <option value="admin">Admin</option>
+                    <option value="Member">Team Member</option>
+                    <option value="Captain">Team Captain</option>
+                    <option value="Admin">Admin</option>
                 </select>
             </div>
             

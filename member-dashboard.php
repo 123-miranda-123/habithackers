@@ -67,21 +67,14 @@ if ($result->num_rows > 0) {
 <section class="container">
     <div id = "title">
         <h1>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h1>
-        <h1>Team <?php echo htmlspecialchars($team_name); ?></p>
+        <h1>Team: <?php echo htmlspecialchars($team_name); ?></p>
     </div>
 
-    <h3>Your Habit Logs</h3>
-    <?php if (empty($habit_logs)): ?>
-        <p>No habit logs available yet. Start logging your habits!</p>
-    <?php else: ?>
-        <ul>
-            <?php foreach ($habit_logs as $habit): ?>
-                <li><?php echo htmlspecialchars($habit); ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-    
-    <button class="open-btn" onclick="openPopup()">Open Popup</button>
+<?php
+$sql = "SELECT * FROM habit_types"; 
+$result = $conn->query($sql);
+?>
+    <button class="open-btn" onclick="openPopup()">+ Create a New Habit</button>
 
     <div id="overlay" class="overlay">
     <div class="popup">
@@ -89,40 +82,125 @@ if ($result->num_rows > 0) {
           <h2>Create a New Habit</h2>
           <div class="input-group">
                 <select name="habit-type" id="habit-type" class = "dropdown" required>
-                    <option value="" disabled selected>Select Habit Type</option>
-                    <option value="exercise">Exercise</option>
-                    <option value="reading">Reading</option>
-                    <option value="journaling">Journaling</option>
-                    <option value="meditation">Meditation</option>
-                    <option value="hydration">Hydration</option>
-                    <option value="sleep">Sleep</option>
-                    <option value="project">Project</option>
-                    <option value="skill">Skill Learning</option>
+                <option value="" disabled selected>Select Habit Type</option>
+                <?php while ($row = $result->fetch_assoc()) { ?>
+            <option value="<?php echo $row['habit_name']; ?>" data-unit="<?php echo $row['unit']; ?>">
+                <?php echo $row['habit_name'] . " (" . $row['unit'] . ")"; ?>
+            </option>
+        <?php } ?>
                 </select>
             </div>
+
             <div class="input-group">
-                <label for="date">Start Date</label>
-                <input type="text" id="date" name="date" placeholder="dd/mm/yyyy" required>
+                <label for="number">Frequency (Goal)</label>
+                <input type="goal" id="goal" name="goal" required>
             </div>
 
             <div class="input-group">
-                <label for="number">Frequency</label>
-                <input type="number" id="number" name="number" required>
-            </div>
-
-            <div class="input-group">
-                <select name="habit-type" id="habit-type" class = "dropdown" required>
+                <select name="time-interval" id="time-interval" class = "dropdown" required>
                     <option value="" disabled selected>Select Time Interval</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
                 </select>
             </div>
 
             <div>
               <button class="cancel-btn" onclick="closePopup()">Cancel</button>
-              <button class="submit-btn">Submit</button>
+              <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
             </div>
+
+    </form>
+    </div>
+    </div>
+    
+
+    <?php
+// Fetch user's habits from the user_habits table
+$sql = "SELECT user_habits.*, habit_types.habit_name, habit_types.unit 
+        FROM user_habits
+        JOIN habit_types ON user_habits.habit_type_id = habit_types.id
+        WHERE user_habits.user_id = ?";
+
+$stmt = $conn->prepare($sql);
+// Bind the user_id parameter from the session to the query
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
+
+echo "<h2>Your Habit Logs</h2>";
+
+if ($result->num_rows > 0) {
+    echo "<table>";
+    echo "<tr><th>Habit Type</th>
+    <th>Your Goal</th>
+    <th>Your Progress</th>
+    <th>Time Frame</th>
+    <th>Team Goal</th>
+    <th>Company Goal</th>
+    <th>Actions</th></tr>";
+
+    // Loop through the results and display the habit type with goal and progress
+    while ($row = $result->fetch_assoc()) {
+        // Fetch team goal and company goal
+        $habit_name = $row['habit_name'];
+        $unit = $row['unit'];
+
+        // Fetch team goal
+        $team_goal_sql = "SELECT goal FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
+        WHERE habit_name = ? AND team_id = ?";
+        $team_stmt = $conn->prepare($team_goal_sql);
+        $team_stmt->bind_param("si", $habit_name, $_SESSION['team_id']); // assuming team_id is stored in session
+        $team_stmt->execute();
+        $team_goal_result = $team_stmt->get_result();
+        if ($team_goal_result->num_rows > 0) {
+            $team_goal = $team_goal_result->fetch_assoc()['goal'];
+        } else {
+            $team_goal = null;
+        }
+        
+
+        // Fetch company goal
+        $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
+        $company_stmt = $conn->prepare($company_goal_sql);
+        $company_stmt->bind_param("s", $habit_name);
+        $company_stmt->execute();
+        $company_goal_result = $company_stmt->get_result();
+        if ($company_goal_result->num_rows > 0) {
+            $company_goal = $company_goal_result->fetch_assoc()['goal'];
+        } else {
+            $company_goal = null;
+        }
+    
+        $progress_percentage = ($row['progress'] / $row['goal']) * 100;
+        $progress_percentage = min(100, $progress_percentage); // Make sure it doesn't exceed 100%
+
+
+        echo "<tr>";
+        echo "<td>" . $row['habit_name'] . "</td>";
+        echo "<td>" . $row['goal'] . " " . $row['unit'] . "</td>";
+        echo "<td>
+                <div class='progress-bar'>
+                    <div class='progress' style='width: " . $progress_percentage . "%;'></div>
+                </div>
+                " . $row['progress'] . " " . $row['unit'] . "
+              </td>";
+        echo "<td>" . $row['time_frame'] . "</td>";
+        echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
+        echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
+        echo "<td>
+                <a href='set-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Set/Update Goal</a> | 
+                <a href='enter-progress.php?habit_type_id=" . $row['habit_type_id'] . "'>Enter Progress</a>
+              </td>";
+        echo "</tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "<p>No habits found for this user. Please add some habits.</p>";
+}
+?>
+
 
 
   <script>
@@ -136,6 +214,8 @@ if ($result->num_rows > 0) {
       document.getElementById('main-content').classList.remove('greyed-out');
     }
   </script>
+
+
 </body>
 </html>
 

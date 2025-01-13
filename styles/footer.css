@@ -1,14 +1,26 @@
 @font-face {
-    font-family: 'Poppins';
-    src: url(../fonts/Poppins/Poppins-Bold.ttf) format('truetype');
-  }
+  font-family: 'Poppins';
+  src: url(fonts/Poppins/Poppins-Bold.ttf)
+}
+
 @font-face {
-    font-family: 'Lexend';
-    src: url(../fonts/Lexend/Lexend-VariableFont_wght.ttf);
-  }
+  font-family: 'Poppins-SemiBold';
+  src: url(fonts/Poppins/Poppins-SemiBold.ttf)
+}
+
 @font-face {
-  font-family: 'Lovelo';
-  src: url(../fonts/Lovelo/LoveloBlack.otf);
+  font-family: 'Poppins-Regular';
+  src: url(fonts/Poppins/Poppins-Regular.ttf)
+}
+
+@font-face {
+  font-family: 'Poppins-Italic';
+  src: url(fonts/Poppins/Poppins-Italic.ttf)
+}
+
+@font-face {
+  font-family: 'Lexend';
+  src: url(fonts/Lexend/Lexend-VariableFont_wght.ttf);
 }
 
   

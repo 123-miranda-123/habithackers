@@ -1,22 +1,27 @@
 @font-face {
-    font-family: 'Poppins-Bold';
-    src: url(../../fonts/Poppins/Poppins-Bold.ttf) format('truetype');
-}
-  
-@font-face {
+    font-family: 'Poppins';
+    src: url(../fonts/Poppins/Poppins-Bold.ttf)
+  }
+
+  @font-face {
     font-family: 'Poppins-SemiBold';
-    src: url(../../fonts/Poppins/Poppins-SemiBold.ttf) format('truetype');
-}
+    src: url(../fonts/Poppins/Poppins-SemiBold.ttf)
+  }
   
-@font-face {
+  @font-face {
     font-family: 'Poppins-Regular';
-    src: url(../../fonts/Poppins/Poppins-Regular.ttf) format('truetype');
-}
-  
-@font-face {
+    src: url(../fonts/Poppins/Poppins-Regular.ttf)
+  }
+
+  @font-face {
+    font-family: 'Poppins-Italic';
+    src: url(../fonts/Poppins/Poppins-Italic.ttf)
+  }
+
+  @font-face {
     font-family: 'Lexend';
-    src: url(../../fonts/Lexend/Lexend-VariableFont_wght.ttf);
-}
+    src: url(../fonts/Lexend/Lexend-VariableFont_wght.ttf);
+  }
   
   
 * {
@@ -46,6 +51,10 @@ html {
     margin: 200px 250px;
 }
 
+h2 {
+    font-family: 'Poppins-SemiBold';
+    margin-bottom: 10px;
+}
 .overlay {
     position: fixed;
     top: 0;
@@ -104,6 +113,7 @@ html {
   }
 
   button {
+    font-family: 'Lexend';
     padding: 10px 15px;
     margin: 10px 5px;
     border: none;
@@ -129,3 +139,50 @@ html {
   .greyed-out {
     filter: brightness(0.5);
   }
+
+/* General table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-family: 'Poppins-Regular';
+  }
+  
+  /* Header row */
+  table th {
+    background-color: #57a4fe;
+    color: white;
+    font-family: 'Poppins-SemiBold';
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  /* Data rows */
+  table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  /* Alternate row colors for better readability */
+  table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  table tr:hover {
+    background-color: #f1f1f1;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.progress {
+    height: 100%;
+    background-color: #1bc01b;
+    border-radius: 5px;
+}
