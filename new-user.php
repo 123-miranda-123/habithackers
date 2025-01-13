@@ -28,12 +28,12 @@ require_once "database.php";
         </div>
 
         <div class = "input-group">
-            <label for="name" >Full Name:</label>
+            <label for="name" >Full Name</label>
             <input type="text" id="name" name="name" required>
         </div>
 
         <div class = "input-group">
-            <label for="email" >Email:</label>
+            <label for="email" >Email</label>
             <input type="text" id="email" name="email" required>
         </div>
 
@@ -51,16 +51,17 @@ require_once "database.php";
             <label for="role">Account Type</label>
             <select name="role" id="role" required>
                     <option value="" disabled selected>Select Role</option>
-                    <option value="member">Team Member</option>
-                    <option value="captain">Team Captain</option>
-                    <option value="admin">Admin</option>
+                    <option value="Member">Team Member</option>
+                    <option value="Captain">Team Captain</option>
+                    <option value="Admin">Admin</option>
                 </select>
         </div>
 
         <div class = "submit-btn">
             <button type="submit" name = "submit">Create User</button>
-            <button id = "cancel" type="cancel" name = "cancel">Cancel</button>
+            <button id = "cancel" type="button" name = "cancel" a href = "window.history.back()">Cancel</button>
         </div>
+        
     </form>
 </section>
 </body>
@@ -81,11 +82,6 @@ function validatePassword($password) {
         return "Password must contain at least one special character.";
     }
     return true;
-}
-
-if (isset($_POST["cancel"])) {
-    header("Location: admin-dashboard.php");
-    exit();
 }
 
 if (isset($_POST["submit"])) {
