@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 13, 2025 at 02:55 AM
+-- Generation Time: Jan 13, 2025 at 06:56 AM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -24,26 +24,29 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `company_goals`
+-- Table structure for table `company_habits`
 --
 
-CREATE TABLE `company_goals` (
+CREATE TABLE `company_habits` (
   `id` int NOT NULL,
-  `habit_id` int NOT NULL,
-  `goal_amount` decimal(10,2) NOT NULL
+  `habit_type_id` int NOT NULL,
+  `time_frame` enum('daily','weekly','monthly') COLLATE utf8mb4_general_ci NOT NULL,
+  `goal` int NOT NULL DEFAULT '0',
+  `progress` int NOT NULL DEFAULT '0',
+  `last_updated` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `company_progress`
+-- Table structure for table `company_habit_progress`
 --
 
-CREATE TABLE `company_progress` (
+CREATE TABLE `company_habit_progress` (
   `id` int NOT NULL,
-  `habit_id` int NOT NULL,
-  `progress_amount` decimal(10,2) NOT NULL,
-  `progress_date` date NOT NULL
+  `habit_type_id` int NOT NULL,
+  `progress` int NOT NULL,
+  `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -75,19 +78,6 @@ INSERT INTO `habit_types` (`id`, `habit_name`, `unit`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notifications`
---
-
-CREATE TABLE `notifications` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `message` text COLLATE utf8mb4_general_ci NOT NULL,
-  `sent_date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `teams`
 --
 
@@ -107,14 +97,31 @@ INSERT INTO `teams` (`id`, `name`, `captain_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `team_goals`
+-- Table structure for table `team_habits`
 --
 
-CREATE TABLE `team_goals` (
+CREATE TABLE `team_habits` (
   `id` int NOT NULL,
   `team_id` int NOT NULL,
-  `habit_id` int NOT NULL,
-  `goal_amount` decimal(10,2) NOT NULL
+  `habit_type_id` int NOT NULL,
+  `time_frame` enum('daily','weekly','monthly') COLLATE utf8mb4_general_ci NOT NULL,
+  `goal` int NOT NULL DEFAULT '0',
+  `progress` int NOT NULL DEFAULT '0',
+  `last_updated` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `team_habit_progress`
+--
+
+CREATE TABLE `team_habit_progress` (
+  `id` int NOT NULL,
+  `team_id` int NOT NULL,
+  `habit_type_id` int NOT NULL,
+  `progress` int NOT NULL,
+  `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -140,16 +147,25 @@ INSERT INTO `team_members` (`id`, `user_id`, `team_id`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `team_progress`
+-- Table structure for table `unit_conversion`
 --
 
-CREATE TABLE `team_progress` (
+CREATE TABLE `unit_conversion` (
   `id` int NOT NULL,
-  `team_id` int NOT NULL,
-  `habit_id` int NOT NULL,
-  `progress_amount` decimal(10,2) NOT NULL,
-  `progress_date` date NOT NULL
+  `unit` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `factor` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `unit_conversion`
+--
+
+INSERT INTO `unit_conversion` (`id`, `unit`, `factor`) VALUES
+(1, 'Minutes', 1.00),
+(2, 'Pages', 2.00),
+(3, 'Entries', 5.00),
+(4, 'Cups', 15.00),
+(5, 'Hours', 60.00);
 
 -- --------------------------------------------------------
 
@@ -177,28 +193,39 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_goals`
+-- Table structure for table `user_habits`
 --
 
-CREATE TABLE `user_goals` (
+CREATE TABLE `user_habits` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
-  `habit_id` int NOT NULL,
-  `goal_amount` decimal(10,2) NOT NULL
+  `habit_type_id` int NOT NULL,
+  `time_frame` enum('Daily','Weekly','Monthly') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `goal` int NOT NULL DEFAULT '0',
+  `progress` int NOT NULL DEFAULT '0',
+  `last_updated` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_habits`
+--
+
+INSERT INTO `user_habits` (`id`, `user_id`, `habit_type_id`, `time_frame`, `goal`, `progress`, `last_updated`) VALUES
+(1, 1, 1, 'Daily', 12, 0, '2025-01-12 21:56:04'),
+(3, 1, 4, 'Weekly', 30, 0, '2025-01-13 00:01:43');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_progress`
+-- Table structure for table `user_habit_progress`
 --
 
-CREATE TABLE `user_progress` (
+CREATE TABLE `user_habit_progress` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
-  `habit_id` int NOT NULL,
-  `progress_amount` decimal(10,2) NOT NULL,
-  `progress_date` date NOT NULL
+  `habit_type_id` int NOT NULL,
+  `progress` int NOT NULL,
+  `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -206,31 +233,24 @@ CREATE TABLE `user_progress` (
 --
 
 --
--- Indexes for table `company_goals`
+-- Indexes for table `company_habits`
 --
-ALTER TABLE `company_goals`
+ALTER TABLE `company_habits`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `habit_id` (`habit_id`);
+  ADD KEY `habit_type_id` (`habit_type_id`);
 
 --
--- Indexes for table `company_progress`
+-- Indexes for table `company_habit_progress`
 --
-ALTER TABLE `company_progress`
+ALTER TABLE `company_habit_progress`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `habit_id` (`habit_id`);
+  ADD KEY `habit_type_id` (`habit_type_id`);
 
 --
 -- Indexes for table `habit_types`
 --
 ALTER TABLE `habit_types`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `notifications`
---
-ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `teams`
@@ -240,12 +260,20 @@ ALTER TABLE `teams`
   ADD KEY `captain_id` (`captain_id`);
 
 --
--- Indexes for table `team_goals`
+-- Indexes for table `team_habits`
 --
-ALTER TABLE `team_goals`
+ALTER TABLE `team_habits`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `habit_type_id` (`habit_type_id`),
+  ADD KEY `team_id` (`team_id`);
+
+--
+-- Indexes for table `team_habit_progress`
+--
+ALTER TABLE `team_habit_progress`
   ADD PRIMARY KEY (`id`),
   ADD KEY `team_id` (`team_id`),
-  ADD KEY `habit_id` (`habit_id`);
+  ADD KEY `habit_type_id` (`habit_type_id`);
 
 --
 -- Indexes for table `team_members`
@@ -256,12 +284,10 @@ ALTER TABLE `team_members`
   ADD KEY `team_id` (`team_id`);
 
 --
--- Indexes for table `team_progress`
+-- Indexes for table `unit_conversion`
 --
-ALTER TABLE `team_progress`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `team_id` (`team_id`),
-  ADD KEY `habit_id` (`habit_id`);
+ALTER TABLE `unit_conversion`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -270,35 +296,35 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_goals`
+-- Indexes for table `user_habits`
 --
-ALTER TABLE `user_goals`
+ALTER TABLE `user_habits`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `habit_id` (`habit_id`);
+  ADD KEY `habit_type_id` (`habit_type_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `user_progress`
+-- Indexes for table `user_habit_progress`
 --
-ALTER TABLE `user_progress`
+ALTER TABLE `user_habit_progress`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `habit_id` (`habit_id`);
+  ADD KEY `habit_type_id` (`habit_type_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `company_goals`
+-- AUTO_INCREMENT for table `company_habits`
 --
-ALTER TABLE `company_goals`
+ALTER TABLE `company_habits`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `company_progress`
+-- AUTO_INCREMENT for table `company_habit_progress`
 --
-ALTER TABLE `company_progress`
+ALTER TABLE `company_habit_progress`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -308,21 +334,21 @@ ALTER TABLE `habit_types`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `team_goals`
+-- AUTO_INCREMENT for table `team_habits`
 --
-ALTER TABLE `team_goals`
+ALTER TABLE `team_habits`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `team_habit_progress`
+--
+ALTER TABLE `team_habit_progress`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -332,10 +358,10 @@ ALTER TABLE `team_members`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `team_progress`
+-- AUTO_INCREMENT for table `unit_conversion`
 --
-ALTER TABLE `team_progress`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `unit_conversion`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -344,15 +370,15 @@ ALTER TABLE `users`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `user_goals`
+-- AUTO_INCREMENT for table `user_habits`
 --
-ALTER TABLE `user_goals`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `user_habits`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `user_progress`
+-- AUTO_INCREMENT for table `user_habit_progress`
 --
-ALTER TABLE `user_progress`
+ALTER TABLE `user_habit_progress`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -360,22 +386,16 @@ ALTER TABLE `user_progress`
 --
 
 --
--- Constraints for table `company_goals`
+-- Constraints for table `company_habits`
 --
-ALTER TABLE `company_goals`
-  ADD CONSTRAINT `company_goals_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit_types` (`id`);
+ALTER TABLE `company_habits`
+  ADD CONSTRAINT `company_habits_ibfk_1` FOREIGN KEY (`habit_type_id`) REFERENCES `habit_types` (`id`);
 
 --
--- Constraints for table `company_progress`
+-- Constraints for table `company_habit_progress`
 --
-ALTER TABLE `company_progress`
-  ADD CONSTRAINT `company_progress_ibfk_1` FOREIGN KEY (`habit_id`) REFERENCES `habit_types` (`id`);
-
---
--- Constraints for table `notifications`
---
-ALTER TABLE `notifications`
-  ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+ALTER TABLE `company_habit_progress`
+  ADD CONSTRAINT `company_habit_progress_ibfk_1` FOREIGN KEY (`habit_type_id`) REFERENCES `habit_types` (`id`);
 
 --
 -- Constraints for table `teams`
@@ -384,11 +404,18 @@ ALTER TABLE `teams`
   ADD CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`captain_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `team_goals`
+-- Constraints for table `team_habits`
 --
-ALTER TABLE `team_goals`
-  ADD CONSTRAINT `team_goals_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`),
-  ADD CONSTRAINT `team_goals_ibfk_2` FOREIGN KEY (`habit_id`) REFERENCES `habit_types` (`id`);
+ALTER TABLE `team_habits`
+  ADD CONSTRAINT `team_habits_ibfk_1` FOREIGN KEY (`habit_type_id`) REFERENCES `habit_types` (`id`),
+  ADD CONSTRAINT `team_habits_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `team_habit_progress`
+--
+ALTER TABLE `team_habit_progress`
+  ADD CONSTRAINT `team_habit_progress_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`),
+  ADD CONSTRAINT `team_habit_progress_ibfk_2` FOREIGN KEY (`habit_type_id`) REFERENCES `habit_types` (`id`);
 
 --
 -- Constraints for table `team_members`
@@ -398,25 +425,18 @@ ALTER TABLE `team_members`
   ADD CONSTRAINT `team_members_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `team_progress`
+-- Constraints for table `user_habits`
 --
-ALTER TABLE `team_progress`
-  ADD CONSTRAINT `team_progress_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`),
-  ADD CONSTRAINT `team_progress_ibfk_2` FOREIGN KEY (`habit_id`) REFERENCES `habit_types` (`id`);
+ALTER TABLE `user_habits`
+  ADD CONSTRAINT `user_habits_ibfk_1` FOREIGN KEY (`habit_type_id`) REFERENCES `habit_types` (`id`),
+  ADD CONSTRAINT `user_habits_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `user_goals`
+-- Constraints for table `user_habit_progress`
 --
-ALTER TABLE `user_goals`
-  ADD CONSTRAINT `user_goals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `user_goals_ibfk_2` FOREIGN KEY (`habit_id`) REFERENCES `habit_types` (`id`);
-
---
--- Constraints for table `user_progress`
---
-ALTER TABLE `user_progress`
-  ADD CONSTRAINT `user_progress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `user_progress_ibfk_2` FOREIGN KEY (`habit_id`) REFERENCES `habit_types` (`id`);
+ALTER TABLE `user_habit_progress`
+  ADD CONSTRAINT `user_habit_progress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `user_habit_progress_ibfk_2` FOREIGN KEY (`habit_type_id`) REFERENCES `habit_types` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -59,6 +59,7 @@ if ($result->num_rows > 0) {
                 <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
             </a>
             <div class="auth-buttons">
+                <a href ="leaderboard.php" id="leaderboard">Leaderboard</a>
                 <a href="help.html" id="help">Help</a>
                 <a href="logout.php" id="logout">Logout</a>
             </div>
@@ -80,16 +81,44 @@ $result = $conn->query($sql);
     <div class="popup">
     <form action="create-habit.php" method="POST">
           <h2>Create a New Habit</h2>
-          <div class="input-group">
+
+            <div class="input-group">
+                <label for="number">Frequency (Goal)</label>
+                <input type="goal" id="goal" name="goal" required>
+            </div>
+
+            <div class="input-group">
                 <select name="habit-type" id="habit-type" class = "dropdown" required>
                 <option value="" disabled selected>Select Habit Type</option>
                 <?php while ($row = $result->fetch_assoc()) { ?>
             <option value="<?php echo $row['habit_name']; ?>" data-unit="<?php echo $row['unit']; ?>">
                 <?php echo $row['habit_name'] . " (" . $row['unit'] . ")"; ?>
             </option>
-        <?php } ?>
+            <?php } ?>
                 </select>
             </div>
+
+            <div class="input-group">
+                <select name="time-interval" id="time-interval" class = "dropdown" required>
+                    <option value="" disabled selected>Select Time Interval</option>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                </select>
+            </div>
+
+            <div>
+              <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+              <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
+            </div>
+    </form>
+    </div>
+    </div>
+
+    <div id="overlay2" class="overlay">
+    <div class="popup">
+    <form action="set-goal.php" method="POST">
+          <h2>Update Goal</h2>
 
             <div class="input-group">
                 <label for="number">Frequency (Goal)</label>
@@ -109,7 +138,6 @@ $result = $conn->query($sql);
               <button class="cancel-btn" onclick="closePopup()">Cancel</button>
               <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
             </div>
-
     </form>
     </div>
     </div>
@@ -133,7 +161,6 @@ echo "<h2>Your Habit Logs</h2>";
 if ($result->num_rows > 0) {
     echo "<table>";
     echo "<tr><th>Habit Type</th>
-    <th>Your Goal</th>
     <th>Your Progress</th>
     <th>Time Frame</th>
     <th>Team Goal</th>
@@ -178,19 +205,19 @@ if ($result->num_rows > 0) {
 
         echo "<tr>";
         echo "<td>" . $row['habit_name'] . "</td>";
-        echo "<td>" . $row['goal'] . " " . $row['unit'] . "</td>";
         echo "<td>
                 <div class='progress-bar'>
                     <div class='progress' style='width: " . $progress_percentage . "%;'></div>
                 </div>
-                " . $row['progress'] . " " . $row['unit'] . "
+                " . $row['progress'] . " " . $row['unit'] . " / " . $row['goal'] . " " . $row['unit'] . "
               </td>";
         echo "<td>" . $row['time_frame'] . "</td>";
         echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
         echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
         echo "<td>
-                <a href='set-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Set/Update Goal</a> | 
-                <a href='enter-progress.php?habit_type_id=" . $row['habit_type_id'] . "'>Enter Progress</a>
+                <button id = 'set-goal' class='open-btn' onclick='openPopup2()'>Update Goal</button>
+                <button id = 'enter-progress' class='open-btn' onclick='openPopup3()'><a href='enter-progress.php?habit_type_id=" . $row['habit_type_id'] . "'>Enter Progress</a></button>
+                <button id = 'delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
               </td>";
         echo "</tr>";
     }
@@ -212,6 +239,26 @@ if ($result->num_rows > 0) {
     function closePopup() {
       document.getElementById('overlay').style.display = 'none';
       document.getElementById('main-content').classList.remove('greyed-out');
+    }
+
+    function openPopup2() {
+      document.getElementById('overlay2').style.display = 'flex';
+      document.getElementById('main-content2').classList.add('greyed-out');
+    }
+
+    function closePopup2() {
+      document.getElementById('overlay2').style.display = 'none';
+      document.getElementById('main-content2').classList.remove('greyed-out');
+    }
+
+    function openPopup3() {
+      document.getElementById('overlay3').style.display = 'flex';
+      document.getElementById('main-content3').classList.add('greyed-out');
+    }
+
+    function closePopup3() {
+      document.getElementById('overlay2').style.display = 'none';
+      document.getElementById('main-content3').classList.remove('greyed-out');
     }
   </script>
 
