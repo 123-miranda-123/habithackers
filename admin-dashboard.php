@@ -2,7 +2,7 @@
 session_start();
 require_once "database.php";
 
-if ($_SESSION["user_role"] !== "admin") {
+if (strtolower($_SESSION["user_role"]) !== "admin") {
     header("Location: index.php");
 }
 // Ensure user is logged in
