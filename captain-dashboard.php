@@ -1,7 +1,17 @@
-<?php  
-    if ($_SESSION["user_role"] !== "admin") {
+<?php
+    session_start();
+    require_once("database.php");
+    
+    if ($_SESSION["user_role"] !== "Captain") {
         header("Location: index.php");
     }
+
+    // Ensure user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login page if user is not logged in
+    header("Location: login.php");
+    exit();
+}
     if ($conn->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
@@ -24,6 +34,7 @@
                 <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
             </a>
             <div class="auth-buttons">
+                <a href ="leaderboard.php" id="leaderboard">Leaderboard</a>
                 <a href="help.html" id="help">Help</a>
                 <a href="logout.php" id="logout">Logout</a>
             </div>

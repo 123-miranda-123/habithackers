@@ -136,6 +136,23 @@ h2 {
     color: white;
   }
 
+  button a {
+    text-decoration: none;
+    color: white;
+  }
+
+  #set-goal {
+    background-color: #57a4fe;
+  }
+
+  #enter-progress {
+    background-color: #1bc01b;
+  }
+
+  #delete-goal {
+    background-color: rgb(238, 22, 22);
+  }
+
   .greyed-out {
     filter: brightness(0.5);
   }
