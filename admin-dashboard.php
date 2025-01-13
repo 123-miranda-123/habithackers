@@ -83,30 +83,12 @@ if ($conn->connect_error) {
     <link rel="icon" href="images/icon.png" type="image/png">
 </head>
 <body>
-<div id="overlay" class="overlay">
-    <div class="popup">
-      <h2>Popup Menu</h2>
-      <select class="dropdown">
-        <option value="">Select Option 1</option>
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-      </select>
-      <input type="text" class="input-box" placeholder="Type here for input 1">
-      <input type="text" class="input-box" placeholder="Type here for input 2">
-      <div>
-        <button class="cancel-btn" onclick="closePopup()">Cancel</button>
-        <button class="submit-btn">Submit</button>
-      </div>
-    </div>
-  </div>
-
     <script>
         function openPopup() {
-            documment.getElementById('overlay').style.display = 'flex';
+            document.getElementById('overlay').style.display = 'flex';
             document.getElementById('main-content').classList.add('greyed-out');
         } function closePopup() {
-            documment.getElementById('overlay').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
             document.getElementById('main-content').classList.remove('greyed-out');
         }
     </script>
@@ -121,7 +103,24 @@ if ($conn->connect_error) {
             </div>
         </div>
     </nav>
-    
+    <div id="overlay" class="overlay">
+    <div class="popup">
+      <h2>Popup Menu</h2>
+      <select class="dropdown">
+        <option value="">Select Option 1</option>
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+      </select>
+      <input type="text" class="input-box" placeholder="Type here for input 1">
+      <input type="text" class="input-box" placeholder="Type here for input 2">
+      <div>
+        <button class="cancel-btn" onclick='closePopup()'>Cancel</button>
+        <button class="submit-btn">Submit</button>
+      </div>
+    </div>
+  </div>
+
     <section class = "container">
         <h1>Admin Dashboard</h1>
         <h2>Users</h2>
@@ -134,8 +133,10 @@ if ($conn->connect_error) {
                 <th>Role</th>
                 <th>Actions</th>
             </tr>
+            
+            
             <?php
-
+                
             $sql = "SELECT * FROM users";
             $result = $conn->query($sql);
 
@@ -145,13 +146,14 @@ if ($conn->connect_error) {
             }
 
             while ($row = $result->fetch_assoc()) {
-                echo "<tr>
+                echo "<tr> 
                 <td>" . $row["id"] . "</td>
                 <td>" . $row["name"] . "</td>
                 <td>" . $row["email"] . "</td>
                 <td>" . $row["role"] . "</td>
                 <td>
-                    <button id = 'edit' onclick=openPopup()>Edit</button>
+                    <button id = 'edit' onclick= 'openPopup()'  >Edit</button>
+
                     <button id = 'delete'>Delete</button>
                 </td>
             </tr>";
