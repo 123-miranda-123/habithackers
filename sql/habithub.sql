@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 13, 2025 at 06:24 AM
+-- Generation Time: Jan 13, 2025 at 06:56 AM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -78,19 +78,6 @@ INSERT INTO `habit_types` (`id`, `habit_name`, `unit`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notifications`
---
-
-CREATE TABLE `notifications` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `message` text COLLATE utf8mb4_general_ci NOT NULL,
-  `sent_date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `teams`
 --
 
@@ -156,6 +143,29 @@ CREATE TABLE `team_members` (
 
 INSERT INTO `team_members` (`id`, `user_id`, `team_id`, `role`) VALUES
 (1, 3, 1, 'Member');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `unit_conversion`
+--
+
+CREATE TABLE `unit_conversion` (
+  `id` int NOT NULL,
+  `unit` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `factor` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `unit_conversion`
+--
+
+INSERT INTO `unit_conversion` (`id`, `unit`, `factor`) VALUES
+(1, 'Minutes', 1.00),
+(2, 'Pages', 2.00),
+(3, 'Entries', 5.00),
+(4, 'Cups', 15.00),
+(5, 'Hours', 60.00);
 
 -- --------------------------------------------------------
 
@@ -243,13 +253,6 @@ ALTER TABLE `habit_types`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `notifications`
---
-ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
 -- Indexes for table `teams`
 --
 ALTER TABLE `teams`
@@ -279,6 +282,12 @@ ALTER TABLE `team_members`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `team_id` (`team_id`);
+
+--
+-- Indexes for table `unit_conversion`
+--
+ALTER TABLE `unit_conversion`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -325,12 +334,6 @@ ALTER TABLE `habit_types`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
@@ -353,6 +356,12 @@ ALTER TABLE `team_habit_progress`
 --
 ALTER TABLE `team_members`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `unit_conversion`
+--
+ALTER TABLE `unit_conversion`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -387,12 +396,6 @@ ALTER TABLE `company_habits`
 --
 ALTER TABLE `company_habit_progress`
   ADD CONSTRAINT `company_habit_progress_ibfk_1` FOREIGN KEY (`habit_type_id`) REFERENCES `habit_types` (`id`);
-
---
--- Constraints for table `notifications`
---
-ALTER TABLE `notifications`
-  ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `teams`

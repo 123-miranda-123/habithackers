@@ -1,13 +1,31 @@
 <?php
 require_once "database.php";
-if (!isset($_SESSION['user_id'])) {
-    // Redirect to login page if user is not logged in
-    header("Location: login.php");
-    exit();
-}
+
 if ($conn->connect_error) {
     die("Connection failed: " . $connection->connect_error);
 }
+
+$sql_individual_leaderboard = "SELECT users.user_name, SUM(user_habits.progress * unit_conversion.factor) AS total_normalized_progress, (SUM(user_habits.progress * unit_conversion.factor) / SUM(habit_types.goal)) * 100 AS individual_progress_percentage
+FROM user_habits
+JOIN users ON user_habits.user_id = users.user_id
+JOIN habit_types ON user_habits.habit_type_id = habit_types.id
+JOIN unit_conversion ON habit_types.unit = unit_conversion.unit
+GROUP BY users.user_id
+ORDER BY individual_progress_percentage DESC, total_normalized_progress DESC;";
+$result_individual = $conn->query($sql_individual_leaderboard);
+
+$sql_team_leaderboard = " SELECT teams.name AS team_name, SUM(user_habits.progress * unit_conversion.factor) AS total_normalized_progress, (SUM(user_habits.progress * unit_conversion.factor) / SUM(habit_types.goal)) * 100 AS team_progress_percentage
+FROM user_habits
+JOIN users ON user_habits.user_id = users.user_id
+JOIN habit_types ON user_habits.habit_type_id = habit_types.id
+JOIN unit_conversion ON habit_types.unit = unit_conversion.unit
+JOIN team_members ON users.user_id = team_members.user_id
+JOIN teams ON team_members.team_id = teams.id
+GROUP BY teams.id
+ORDER BY team_progress_percentage DESC, total_normalized_progress DESC;
+
+";
+$result_team = $conn->query($sql_team_leaderboard);
 ?>
 
 <!DOCTYPE html>
