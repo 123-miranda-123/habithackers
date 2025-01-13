@@ -1,3 +1,12 @@
+<?php  
+    if ($_SESSION["user_role"] !== "admin") {
+        header("Location: index.php");
+    }
+    if ($conn->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
