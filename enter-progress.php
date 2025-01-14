@@ -7,12 +7,18 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+$sql = "SELECT * FROM user_habits WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$habit = $result->fetch_assoc();
 
 // Handling the progress saving
 if (isset($_POST['submit'])) {
     $user_id = $_SESSION['user_id'];
     $progress = $_POST['progress'];
-    $habit_id = $_POST['habit_id'];
+    $habit_id = $habit['id'];
 
     if ($progress <= 0) {
         echo "Invalid goal value.";

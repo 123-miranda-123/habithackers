@@ -118,15 +118,6 @@ $result = $conn->query($sql);
     </div>
     </div>
 
-<?php
-$sql = "SELECT * FROM user_habits WHERE user_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $_SESSION['user_id']);
-$stmt->execute();
-$result = $stmt->get_result();
-$habit = $result->fetch_assoc();
-
-echo '
     <div id="overlay2" class="overlay">
         <div class="popup">
             <form action="set-goal.php" method="POST">
@@ -147,16 +138,13 @@ echo '
                 </div>
 
                 <div>
-                    <input type="hidden" name="habit_id" value="' . htmlspecialchars($habit['id']) . '">
                     <button class="cancel-btn" onclick="closePopup2()">Cancel</button>
                     <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
                 </div>
             </form>
         </div>
     </div>
-';
 
-echo '
     <div id="overlay3" class="overlay">
     <div class="popup">
     <form action="enter-progress.php" method="POST">
@@ -168,15 +156,13 @@ echo '
             </div>
 
             <div>
-                <input type="hidden" name="habit_id" value=" '. htmlspecialchars($habit['id']) . '">
                 <button class="cancel-btn" onclick="closePopup3()">Cancel</button>
                 <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
             </div>
     </form>
     </div>
     </div>
-';
-?>
+    
     <?php
 // Fetch user's habits from the user_habits table
 $sql = "SELECT user_habits.*, habit_types.habit_name, habit_types.unit 

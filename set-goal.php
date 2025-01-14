@@ -8,11 +8,18 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$sql = "SELECT * FROM user_habits WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$habit = $result->fetch_assoc();
+
 // Handle form submission
 if (isset($_POST['submit'])) {
     // Sanitize and fetch form values
     $user_id = $_SESSION['user_id'];
-    $habit_id = $_POST['habit_id']; // Hidden input field from the form
+    $habit_id = $habit['id']; // Hidden input field from the form
     $goal = intval($_POST['goal']); // New goal frequency
     $time_frame = $_POST['time-interval']; // New time interval
 
