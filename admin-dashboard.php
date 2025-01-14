@@ -18,67 +18,6 @@ if ($conn->connect_error) {
 <!DOCTYPE html>
 <html lang="en">
 
-<style>
-     .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-     /* Styles for the popup menu */
-     .popup {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .popup h2 {
-      margin-top: 0;
-    }
-
-    .dropdown {
-      width: 100%;
-      margin: 10px 0;
-    }
-
-    button {
-      padding: 10px 15px;
-      margin: 10px 5px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .open-btn {
-      background-color: #007bff;
-      color: white;
-    }
-
-    .cancel-btn {
-      background-color: #f44336;
-      color: white;
-    }
-
-    .submit-btn {
-      background-color: #4caf50;
-      color: white;
-    }
-
-    .greyed-out {
-      filter: brightness(0.5);
-    }
-</style>
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -92,17 +31,18 @@ if ($conn->connect_error) {
 </head>
 <body>
     <script>
-        function openPopup() {
-            document.getElementById('overlay').style.display = 'flex';
-            document.getElementById('main-content').classList.add('greyed-out');
-        } function closePopup() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('main-content').classList.remove('greyed-out');
-        }
+      function openEdit(id) {
+        window.location.href = 'edit-user.php?id=' + encodeURIComponent(id);
+      }
+      function openDelete(id) {
+        window.location.href = 'delete-user.php?id=' + encodeURIComponent(id);
+      }
     </script>
+    
+
     <nav class="header">
         <div class="header-container">
-            <a href="index.php">
+            <a href="index.ph p">
                 <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
             </a>
             <div class="auth-buttons">
@@ -113,22 +53,7 @@ if ($conn->connect_error) {
         </div>
     </nav>
     <div id="overlay" class="overlay">
-    <div class="popup">
-      <h2>Popup Menu</h2>
-      <select class="dropdown">
-        <option value="">Select Option 1</option>
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-      </select>
-      <input type="text" class="input-box" placeholder="Type here for input 1">
-      <input type="text" class="input-box" placeholder="Type here for input 2">
-      <div>
-        <button class="cancel-btn" onclick='closePopup()'>Cancel</button>
-        <button class="submit-btn">Submit</button>
-      </div>
-    </div>
-  </div>
+    
 
     <section class = "container">
         <h1>Admin Dashboard</h1>
@@ -155,15 +80,17 @@ if ($conn->connect_error) {
             }
 
             while ($row = $result->fetch_assoc()) {
-                echo "<tr> 
-                <td>" . $row["id"] . "</td>
+                echo "
+                <tr> 
+                <td id = 'user-id'>" . $row["id"] . "</td>
                 <td>" . $row["name"] . "</td>
                 <td>" . $row["email"] . "</td>
                 <td>" . $row["role"] . "</td>
                 <td>
-                    <button id = 'edit' onclick= 'openPopup()'  >Edit</button>
-
-                    <button id = 'delete'>Delete</button>
+                  
+                    <button id = 'edit' onclick = openEdit(".$row["id"].")>Edit</button>
+                    <button id = 'delete' onclick = openDelete(".$row["id"].")>Delete</button>
+                  
                 </td>
             </tr>";
             }
@@ -189,9 +116,12 @@ if ($conn->connect_error) {
                 <td>
                     <button href = "edit-user.php">Edit</button>
                     <button>Delete</button>
-                </td>
+         </td>
             </tr>
         </table>
     </section>
 </body>
 </html>
+
+<?php 
+
