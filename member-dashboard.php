@@ -118,6 +118,15 @@ $result = $conn->query($sql);
     </div>
     </div>
 
+<?php
+$sql = "SELECT * FROM user_habits WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$habit = $result->fetch_assoc();
+
+?>
     <div id="overlay2" class="overlay">
     <div class="popup">
     <form action="set-goal.php" method="POST">
@@ -136,8 +145,10 @@ $result = $conn->query($sql);
                     <option value="Monthly">Monthly</option>
                 </select>
             </div>
-
+            
+            
             <div>
+            <input type="hidden" name="habit_id" value="<?php echo htmlspecialchars($habit['id']); ?>">
               <button class="cancel-btn" onclick="closePopup2()">Cancel</button>
               <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
             </div>
