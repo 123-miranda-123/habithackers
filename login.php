@@ -1,13 +1,14 @@
 <?php
 session_start();
 if (isset($_SESSION["user_role"])) {
-    if ($_SESSION["user_role"] === "admin") {
+    $role = $_SESSION["user_role"];
+    if (strtolower($role) === "admin") {
         header("Location: admin-dashboard.php");
         exit();
-    } else if ($_SESSION["user_role"] === "captain") {
+    } else if (strtolower($role) === "captain") {
         header("Location: create-team.php");
         exit();
-    } else if ($_SESSION["user_role"] === "member") {
+    } else if (strtolower($role) === "member") {
         header("Location: join-team.php");
         exit();
     }

@@ -111,11 +111,7 @@ body {
 .submit-btn button {
     margin-top: 50px;
     font-family: 'Lexend';
-    background-color: #57a4fe;
-    border: 1px solid #57a4fe;
-    color: white;
     padding: 12px 25px;
-    border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 20px;
@@ -123,6 +119,11 @@ body {
 
 .submit-btn button:hover {
     background-color: #4d94e0;
+}
+#submit {
+    background-color: #57a4fe;
+    border: 1px solid #57a4fe;
+    color: white;
 }
 
 #cancel{

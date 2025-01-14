@@ -1,8 +1,8 @@
-<?php
+<ta?php
     session_start();
     require_once("database.php");
     
-    if ($_SESSION["user_role"] !== "Captain") {
+    if (strtolower($_SESSION["user_role"]) !== "captain") {
         header("Location: index.php");
     }
 
@@ -31,6 +31,11 @@ if (!isset($_SESSION['user_id'])) {
     </style>
 </head>
 <body>
+    <script>
+      function openEdit(id) {
+        window.location.href = 'edit-user.php?id=' + encodeURIComponent(id);
+      }
+    </script>
     <nav class="header">
         <div class="header-container">
             <a href="index.php">
@@ -47,6 +52,7 @@ if (!isset($_SESSION['user_id'])) {
     <section class = "container">
         <h1>Captain Dashboard</h1>
         <h2>Team Members</h2>
+
         <table class = "users-table">
             <tr>
                 <th>Name</th>
@@ -60,6 +66,34 @@ if (!isset($_SESSION['user_id'])) {
                 <td>Team Captain</td>
                 <td>Actions</td>
             </tr>
+        
+        <?php
+            $sql = "SELECT * FROM team_members";
+            $result = $conn->query($sql);
+            if (! $result) {
+                echo "Invalid query: " . $connection->error;
+                exit();
+            }
+            while ($row = $result->fetch_assoc()) {
+                echo "
+                <tr> 
+                <td id = 'user-id'>" . $row["id"] . "</td>
+                <td>" . $row["name"] . "</td>
+                <td>" . $row["email"] . "</td>
+                <td>" . $row["role"] . "</td>
+                <td>
+                  
+                    <button id = 'edit' onclick = openEdit(".$row["id"].")>Edit</button>
+                    <button id = 'delete' onclick = openDelete(".$row["id"].")>Delete</button>
+                  
+                </td>
+            </tr>"; 
+            }
+        ?>
+        </table>
+
+
+
     </section>
 </body>
 </html>

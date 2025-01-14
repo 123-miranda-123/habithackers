@@ -141,7 +141,7 @@ if (isset($_POST["submit"])) {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-        $rowCount = $result->num_rows;
+         $rowCount = $result->num_rows;
          
         if ($rowCount > 0) {
             header("Location: register.php?message=" . urlencode("Email already exists."));
