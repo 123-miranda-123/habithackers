@@ -68,9 +68,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="input-group">
             <label for="role">Account Type</label>
             <select name="role" id="role" required>
-                <option value="member" <?php if ($role === "member") echo "selected"; ?>>Team Member</option>
-                <option value="captain" <?php if ($role === "captain") echo "selected"; ?>>Team Captain</option>
-                <option value="admin" <?php if ($role === "admin") echo "selected"; ?>>Admin</option>
+                <option value="Member" <?php if ($role === "Member") echo "selected"; ?>>Team Member</option>
+                <option value="Captain" <?php if ($role === "Captain") echo "selected"; ?>>Team Captain</option>
+                <option value="Admin" <?php if ($role === "Admin") echo "selected"; ?>>Admin</option>
             </select>
         </div>
 
