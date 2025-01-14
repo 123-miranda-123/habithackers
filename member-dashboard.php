@@ -126,54 +126,57 @@ $stmt->execute();
 $result = $stmt->get_result();
 $habit = $result->fetch_assoc();
 
-?>
+echo '
     <div id="overlay2" class="overlay">
-    <div class="popup">
-    <form action="set-goal.php" method="POST">
-          <h2>Update Goal</h2>
+        <div class="popup">
+            <form action="set-goal.php" method="POST">
+                <h2>Update Goal</h2>
 
-            <div class="input-group">
-                <label for="number">Frequency (Goal)</label>
-                <input type="number" id="goal" name="goal" required>
-            </div>
+                <div class="input-group">
+                    <label for="number">Frequency (Goal)</label>
+                    <input type="number" id="goal" name="goal" required>
+                </div>
 
-            <div class="input-group">
-                <select name="time-interval" id="time-interval" class = "dropdown" required>
-                    <option value="" disabled selected>Select Time Interval</option>
-                    <option value="Daily">Daily</option>
-                    <option value="Weekly">Weekly</option>
-                    <option value="Monthly">Monthly</option>
-                </select>
-            </div>
-            
-            
-            <div>
-            <input type="hidden" name="habit_id" value="<?php echo htmlspecialchars($habit['id']); ?>">
-              <button class="cancel-btn" onclick="closePopup2()">Cancel</button>
-              <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
-            </div>
-    </form>
+                <div class="input-group">
+                    <select name="time-interval" id="time-interval" class="dropdown" required>
+                        <option value="" disabled selected>Select Time Interval</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                    </select>
+                </div>
+
+                <div>
+                    <input type="hidden" name="habit_id" value="' . htmlspecialchars($habit['id']) . '">
+                    <button class="cancel-btn" onclick="closePopup2()">Cancel</button>
+                    <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
-    </div>
-    
+';
+
+echo '
     <div id="overlay3" class="overlay">
     <div class="popup">
     <form action="enter-progress.php" method="POST">
           <h2>Enter Progress</h2>
 
             <div class="input-group">
-                <label for="number">Enter Progress</label>
+                <label for="progress">Enter Progress</label>
                 <input type="number" id="progress" name="progress" required>
             </div>
 
             <div>
-              <button class="cancel-btn" onclick="closePopup3()">Cancel</button>
-              <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
+                <input type="hidden" name="habit_id" value=" '. htmlspecialchars($habit['id']) . '">
+                <button class="cancel-btn" onclick="closePopup3()">Cancel</button>
+                <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
             </div>
     </form>
     </div>
     </div>
-
+';
+?>
     <?php
 // Fetch user's habits from the user_habits table
 $sql = "SELECT user_habits.*, habit_types.habit_name, habit_types.unit 
