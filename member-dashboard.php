@@ -54,6 +54,7 @@ if ($result->num_rows > 0) {
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <nav class="header">
@@ -162,7 +163,7 @@ $result = $conn->query($sql);
     </form>
     </div>
     </div>
-    
+
     <?php
 // Fetch user's habits from the user_habits table
 $sql = "SELECT user_habits.*, habit_types.habit_name, habit_types.unit 
@@ -248,51 +249,44 @@ if ($result->num_rows > 0) {
 }
 ?>
 
+<div id="charts-container">
 <?php
+// Query to aggregate progress by date for each user and habit type
 $sql = "
-    SELECT 
-        user_id, 
-        habit_type_id, 
-        DATE(timestamp) AS progress_date, 
-        SUM(progress) AS total_progress
-    FROM 
-        user_habit_progress
-    GROUP BY 
-        user_id, 
-        habit_type_id, 
-        progress_date
-    ORDER BY 
-        user_id, 
-        habit_type_id, 
-        progress_date;
+    SELECT user_id, habit_type_id, DATE(timestamp) as date, SUM(progress) as total_progress
+    FROM user_habit_progress
+    WHERE user_id = ? 
+    GROUP BY user_id, habit_type_id, DATE(timestamp)
+    ORDER BY DATE(timestamp)
 ";
 
-$result = $conn->query($sql);
+// Assuming you have a session with user ID stored in `$_SESSION['user_id']`
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION['user_id']); // Use the logged-in user's ID
+$stmt->execute();
+$result = $stmt->get_result();
 
 $data = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $user_id = $row['user_id'];
-        $habit_type_id = $row['habit_type_id'];
+while ($row = $result->fetch_assoc()) {
+    $habit_type_id = $row['habit_type_id'];
+    $date = $row['date'];
+    $total_progress = $row['total_progress'];
 
-        if (!isset($data[$user_id])) {
-            $data[$user_id] = [];
-        }
-
-        if (!isset($data[$user_id][$habit_type_id])) {
-            $data[$user_id][$habit_type_id] = ['dates' => [], 'progress' => []];
-        }
-
-        $data[$user_id][$habit_type_id]['dates'][] = $row['progress_date'];
-        $data[$user_id][$habit_type_id]['progress'][] = $row['total_progress'];
+    // Format the data into a structure where habit_type_id is the key
+    if (!isset($data[$habit_type_id])) {
+        $data[$habit_type_id] = [];
     }
+
+    $data[$habit_type_id][] = [
+        'date' => $date,
+        'progress' => $total_progress
+    ];
 }
 
-echo json_encode($data); // Return JSON for use in Chart.js
+// Output the data as JSON
+echo "<script>var habitData = " . json_encode($data) . ";</script>";
 ?>
-
-
-
+</div>
   <script>
     function openPopup() {
       document.getElementById('overlay').style.display = 'flex';
@@ -325,59 +319,80 @@ echo json_encode($data); // Return JSON for use in Chart.js
     }
   </script>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-        // Fetch data from the PHP script
-        fetch('member-dashboard.php') // Replace with the actual PHP file path
-            .then(response => response.json())
-            .then(data => {
-                const container = document.getElementById('charts-container');
+window.onload = function () {
+    // Fetch data from PHP (ensure the PHP script is correct)
+    fetch('member-dashboard.php')
+        .then((response) => response.json())
+        .then((data) => {
+            // Loop through each habit_type_id and create a chart
+            Object.keys(data).forEach((habitTypeId) => {
+                const habitData = data[habitTypeId];
 
-                // Loop through users
-                for (const [userId, habits] of Object.entries(data)) {
-                    // Loop through each habit for the user
-                    for (const [habitTypeId, habitData] of Object.entries(habits)) {
-                        const canvas = document.createElement('canvas');
-                        container.appendChild(canvas);
+                // Extract dates and progress values
+                const labels = habitData.map((entry) => entry.date);
+                const progressValues = habitData.map((entry) => entry.progress);
 
-                        new Chart(canvas, {
-                            type: 'line',
-                            data: {
-                                labels: habitData.dates, // Dates as X-axis
-                                datasets: [{
-                                    label: `User ${userId} - Habit ${habitTypeId}`,
-                                    data: habitData.progress, // Progress as Y-axis
-                                    borderColor: 'rgba(75, 192, 192, 1)',
-                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                    borderWidth: 2
-                                }]
+                // Create a canvas for each habit type chart
+                const canvasId = `chart-habit-${habitTypeId}`;
+                const canvas = document.createElement("canvas");
+                canvas.id = canvasId;
+
+                // Append to the charts-container div
+                document.getElementById('charts-container').appendChild(canvas);
+
+                // Chart.js configuration for each habit
+                const ctx = document.getElementById(canvasId).getContext("2d");
+                new Chart(ctx, {
+                    type: "bar", // Change to "line" or other chart types if needed
+                    data: {
+                        labels: labels, // X-axis (dates)
+                        datasets: [{
+                            label: `Progress for Habit Type ${habitTypeId}`,
+                            data: progressValues, // Y-axis (progress values)
+                            backgroundColor: "rgba(54, 162, 235, 0.6)",
+                            borderColor: "rgba(54, 162, 235, 1)",
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
                             },
-                            options: {
-                                scales: {
-                                    x: {
-                                        title: {
-                                            display: true,
-                                            text: 'Date'
-                                        }
-                                    },
-                                    y: {
-                                        title: {
-                                            display: true,
-                                            text: 'Progress'
-                                        },
-                                        beginAtZero: true
-                                    }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: "Date",
                                 }
-                            }
-                        });
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: "Progress",
+                                }
+                            },
+                        },
                     }
-                }
-            })
-            .catch(error => console.error('Error fetching chart data:', error));
-    </script>
+                });
+            });
+        })
+        .catch((error) => {
+            console.error("Error loading chart data:", error);
+        });
+}
+
+</script>
+
 
 </body>
 </html>
-
 </section>
 </body>
 </html>

@@ -16,6 +16,11 @@ if (isset($_POST['submit'])) {
     $habit_type = $_POST['habit-type'];
     $goal = $_POST['goal'];
     $time_frame = $_POST['time-interval'];
+
+    if ($goal <= 0) {
+        header("Location: member-dashboard.php?error=Invalid goal value.");
+        exit();
+    }
     
     // Fetch the habit_type_id from the habit_types table
     $sql = "SELECT id FROM habit_types WHERE habit_name = ?";
