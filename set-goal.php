@@ -13,7 +13,18 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $result = $stmt->get_result();
-$habit = $result->fetch_assoc();
+
+// Array to store all habits
+$habits = [];
+
+while ($row = $result->fetch_assoc()) {
+    $habits[] = $row; // Add each habit to the array
+}
+
+// Process each habit
+foreach ($habits as $habit) {
+    $habit_type_id = $habit['habit_type_id'];
+}
 
 // Handle form submission
 if (isset($_POST['submit'])) {
@@ -40,6 +51,7 @@ if (isset($_POST['submit'])) {
     } else {
         echo "Error updating goal: " . $conn->error;
     }
+
 } else {
     echo "No data submitted.";
 }
