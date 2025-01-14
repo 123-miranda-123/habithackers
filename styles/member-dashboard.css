@@ -215,3 +215,9 @@ table {
     background-color: #1bc01b;
     border-radius: 5px;
 }
+
+p {
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
+}

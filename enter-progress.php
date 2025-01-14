@@ -14,14 +14,6 @@ if (isset($_GET['habit_id'])) {
     $habit = $result->fetch_assoc();
 }
 ?>
-<!-- Form to enter progress -->
-<form action="enter_progress.php" method="POST">
-    <label for="progress">Enter Progress:</label>
-    <input type="number" name="progress" required>
-    <input type="hidden" name="habit_id" value="<?php echo $habit['id']; ?>">
-    <button type="submit">Submit Progress</button>
-</form>
-
 <?php
 // Handling the progress saving
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -33,6 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("iii", $progress, $_SESSION['user_id'], $habit_id);
     $stmt->execute();
-    header("Location: dashboard.php"); // Redirect back to dashboard
+    header("Location: member-dashboard.php"); // Redirect back to dashboard
 }
 ?>

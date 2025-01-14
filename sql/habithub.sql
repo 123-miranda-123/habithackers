@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 14, 2025 at 12:58 AM
+-- Generation Time: Jan 14, 2025 at 02:49 AM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -87,6 +87,13 @@ CREATE TABLE `teams` (
   `captain_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `teams`
+--
+
+INSERT INTO `teams` (`id`, `name`, `captain_id`) VALUES
+(1, 'habithackers', 3);
+
 -- --------------------------------------------------------
 
 --
@@ -130,6 +137,10 @@ CREATE TABLE `team_members` (
   `role` enum('Member','Captain') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Member'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `team_members`
+--
+
 -- --------------------------------------------------------
 
 --
@@ -167,6 +178,15 @@ CREATE TABLE `users` (
   `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
+(1, 'Miranda Wang', 'miranda@gmail.com', '$2y$10$ZIKVe3Y5L71Kf0MOn0.TCuLaLGCs/uPGG1RXcqLhy3klXnSnow6Se', 'Admin'),
+(2, 'Member Wang', 'member@gmail.com', '$2y$10$yJTBe6hwApd8wSONuNVWs.vAJOStD81fNiLHLjNeNSD7pH1eiYkOO', 'Member'),
+(3, 'Captain Wang', 'captain@gmail.com', '$2y$10$N9NBhLqnjWwqaLF96UDFR.QOVcJSXoUjuULYiYPlAv5Bumd7cY3ja', 'Captain');
+
 -- --------------------------------------------------------
 
 --
@@ -182,6 +202,13 @@ CREATE TABLE `user_habits` (
   `progress` int NOT NULL DEFAULT '0',
   `last_updated` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_habits`
+--
+
+INSERT INTO `user_habits` (`id`, `user_id`, `habit_type_id`, `time_frame`, `goal`, `progress`, `last_updated`) VALUES
+(1, 5, 1, 'Daily', 12, 0, '2025-01-13 20:09:37');
 
 -- --------------------------------------------------------
 
@@ -306,7 +333,7 @@ ALTER TABLE `habit_types`
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `team_habits`
@@ -324,7 +351,7 @@ ALTER TABLE `team_habit_progress`
 -- AUTO_INCREMENT for table `team_members`
 --
 ALTER TABLE `team_members`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `unit_conversion`
@@ -336,13 +363,13 @@ ALTER TABLE `unit_conversion`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `user_habits`
 --
 ALTER TABLE `user_habits`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_habit_progress`

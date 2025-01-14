@@ -87,7 +87,7 @@ $result = $conn->query($sql);
 
             <div class="input-group">
                 <label for="number">Frequency (Goal)</label>
-                <input type="goal" id="goal" name="goal" required>
+                <input type="number" id="goal" name="goal" required>
             </div>
 
             <div class="input-group">
@@ -125,7 +125,7 @@ $result = $conn->query($sql);
 
             <div class="input-group">
                 <label for="number">Frequency (Goal)</label>
-                <input type="goal" id="goal" name="goal" required>
+                <input type="number" id="goal" name="goal" required>
             </div>
 
             <div class="input-group">
@@ -138,13 +138,30 @@ $result = $conn->query($sql);
             </div>
 
             <div>
-              <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+              <button class="cancel-btn" onclick="closePopup2()">Cancel</button>
               <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
             </div>
     </form>
     </div>
     </div>
     
+    <div id="overlay3" class="overlay">
+    <div class="popup">
+    <form action="enter-progress.php" method="POST">
+          <h2>Enter Progress</h2>
+
+            <div class="input-group">
+                <label for="number">Enter Progress</label>
+                <input type="number" id="progress" name="progress" required>
+            </div>
+
+            <div>
+              <button class="cancel-btn" onclick="closePopup3()">Cancel</button>
+              <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
+            </div>
+    </form>
+    </div>
+    </div>
 
     <?php
 // Fetch user's habits from the user_habits table
@@ -219,7 +236,7 @@ if ($result->num_rows > 0) {
         echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
         echo "<td>
                 <button id = 'set-goal' class='open-btn' onclick='openPopup2()'>Update Goal</button>
-                <button id = 'enter-progress' class='open-btn' onclick='openPopup3()'><a href='enter-progress.php?habit_type_id=" . $row['habit_type_id'] . "'>Enter Progress</a></button>
+                <button id = 'enter-progress' class='open-btn' onclick='openPopup3()'>Enter Progress</button>
                 <button id = 'delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
               </td>";
         echo "</tr>";
@@ -260,7 +277,7 @@ if ($result->num_rows > 0) {
     }
 
     function closePopup3() {
-      document.getElementById('overlay2').style.display = 'none';
+      document.getElementById('overlay3').style.display = 'none';
       document.getElementById('main-content3').classList.remove('greyed-out');
     }
   </script>
