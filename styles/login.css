@@ -30,7 +30,9 @@
 }
 
 body {
-    font-family: 'Poppins-Semibold';
+    font-family: "Poppins", serif;
+    font-weight: 600;
+    font-style: normal;
     background-color: #f4f7fc;
     display: flex;
     justify-content: center;
@@ -66,7 +68,9 @@ body {
 }
 
 #role {
-    font-family: Poppins-Regular;
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -97,14 +101,16 @@ body {
 }
 
 #message {
-    font-family: Poppins-Semibold;
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
     color: #57a4fe;
     margin-bottom: 10px;
 }
 
 .submit-btn button {
     margin-top: 50px;
-    font-family: Lexend;
+    font-family: 'Lexend';
     background-color: #57a4fe;
     border: 1px solid #57a4fe;
     color: white;

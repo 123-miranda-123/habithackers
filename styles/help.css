@@ -39,7 +39,9 @@ html {
 }
   
 #title {
-    font-family: 'Poppins';
+    font-family: "Poppins", serif;
+    font-weight: 700;
+    font-style: normal;
     font-size: 3em;
     margin-bottom: 50px;
 }
@@ -58,12 +60,18 @@ html {
 
 
 h1 {
-    font-family: 'Poppins-Bold';
+    font-family: "Poppins", serif;
+    font-weight: 700;
+    font-style: normal;
 }
 
 h2 {
-    font-family: 'Poppins-SemiBold';
+    font-family: "Poppins", serif;
+    font-weight: 600;
+    font-style: normal;
 }
 p {
-    font-family: 'Poppins-Regular';
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
 }
