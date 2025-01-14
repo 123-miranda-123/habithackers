@@ -253,6 +253,8 @@ if ($result->num_rows > 0) {
 }
 ?>
 
+<h2>Your Progress Visualization</h2>
+
 <div id="charts-container">
 <?php
 // Query to aggregate progress by date for each user and habit type
@@ -321,6 +323,7 @@ while ($row = $result->fetch_assoc()) {
   </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 <script>
 var habitData = <?php echo json_encode($data); ?>;

@@ -9,6 +9,9 @@ function reset_progress() {
     $current_day_of_month = $current_date->format('d');
     $current_datetime = $current_date->format('Y-m-d H:i:s');
 
+
+    error_log("Reset progress called at $current_datetime");
+
     // Reset user habits
     reset_user_habits($current_day, $current_day_of_week, $current_day_of_month, $current_datetime);
 
