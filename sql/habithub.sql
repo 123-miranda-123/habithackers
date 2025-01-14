@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 13, 2025 at 06:56 AM
+-- Generation Time: Jan 14, 2025 at 12:58 AM
 -- Server version: 8.0.40
 -- PHP Version: 8.3.14
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `company_habits` (
   `id` int NOT NULL,
   `habit_type_id` int NOT NULL,
-  `time_frame` enum('daily','weekly','monthly') COLLATE utf8mb4_general_ci NOT NULL,
+  `time_frame` enum('daily','weekly','monthly') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `goal` int NOT NULL DEFAULT '0',
   `progress` int NOT NULL DEFAULT '0',
   `last_updated` datetime DEFAULT CURRENT_TIMESTAMP
@@ -57,8 +57,8 @@ CREATE TABLE `company_habit_progress` (
 
 CREATE TABLE `habit_types` (
   `id` int NOT NULL,
-  `habit_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `unit` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
+  `habit_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `unit` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -83,16 +83,9 @@ INSERT INTO `habit_types` (`id`, `habit_name`, `unit`) VALUES
 
 CREATE TABLE `teams` (
   `id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `captain_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `teams`
---
-
-INSERT INTO `teams` (`id`, `name`, `captain_id`) VALUES
-(1, 'habithackers', 2);
 
 -- --------------------------------------------------------
 
@@ -104,7 +97,7 @@ CREATE TABLE `team_habits` (
   `id` int NOT NULL,
   `team_id` int NOT NULL,
   `habit_type_id` int NOT NULL,
-  `time_frame` enum('daily','weekly','monthly') COLLATE utf8mb4_general_ci NOT NULL,
+  `time_frame` enum('daily','weekly','monthly') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `goal` int NOT NULL DEFAULT '0',
   `progress` int NOT NULL DEFAULT '0',
   `last_updated` datetime DEFAULT CURRENT_TIMESTAMP
@@ -134,15 +127,8 @@ CREATE TABLE `team_members` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
   `team_id` int NOT NULL,
-  `role` enum('Member','Captain') COLLATE utf8mb4_general_ci DEFAULT 'Member'
+  `role` enum('Member','Captain') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Member'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `team_members`
---
-
-INSERT INTO `team_members` (`id`, `user_id`, `team_id`, `role`) VALUES
-(1, 3, 1, 'Member');
 
 -- --------------------------------------------------------
 
@@ -152,7 +138,7 @@ INSERT INTO `team_members` (`id`, `user_id`, `team_id`, `role`) VALUES
 
 CREATE TABLE `unit_conversion` (
   `id` int NOT NULL,
-  `unit` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `unit` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `factor` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -175,20 +161,11 @@ INSERT INTO `unit_conversion` (`id`, `unit`, `factor`) VALUES
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `role` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `role` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
-(1, 'Miranda Wang', 'miranda@gmail.com', '$2y$10$7y4MsnadopPDC233nC5YSeu9y5.sf99LmBprxtOLa6HIisKOrX.Tm', 'admin'),
-(2, 'Team Captain', 'captain@gmail.com', '$2y$10$UG2nzt0UGiEhaKTbOY6JGOq/JdLFdrjSeVe6157aPcWS3W5PouPUO', 'captain'),
-(3, 'Real Member', 'member@gmail.com', '$2y$10$44ZnixnHA5y.D0Pq8/nYE.Jz8f7HfjpRPvvA9qjAiY99b9/djvQyy', 'member');
 
 -- --------------------------------------------------------
 
@@ -205,14 +182,6 @@ CREATE TABLE `user_habits` (
   `progress` int NOT NULL DEFAULT '0',
   `last_updated` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `user_habits`
---
-
-INSERT INTO `user_habits` (`id`, `user_id`, `habit_type_id`, `time_frame`, `goal`, `progress`, `last_updated`) VALUES
-(1, 1, 1, 'Daily', 12, 0, '2025-01-12 21:56:04'),
-(3, 1, 4, 'Weekly', 30, 0, '2025-01-13 00:01:43');
 
 -- --------------------------------------------------------
 
@@ -355,7 +324,7 @@ ALTER TABLE `team_habit_progress`
 -- AUTO_INCREMENT for table `team_members`
 --
 ALTER TABLE `team_members`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `unit_conversion`
@@ -373,7 +342,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_habits`
 --
 ALTER TABLE `user_habits`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user_habit_progress`

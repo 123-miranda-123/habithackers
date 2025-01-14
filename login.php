@@ -22,6 +22,9 @@ if (isset($_SESSION["user_role"])) {
     <link href="styles/header.css" rel="stylesheet" type="text/css"/>
     <link href="styles/login.css" rel="stylesheet" type="text/css">
     <link rel="icon" href="images/icon.png" type="image/png">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
 </head>
 <body>
     <nav class="header">
@@ -37,16 +40,17 @@ if (isset($_SESSION["user_role"])) {
         </div>
     </nav>
 
-    <div id="message">
+    <div class="container">
+        <h2>Sign In</h2>
+        
+        <div id="message">
         <?php
         if (isset($_GET['message'])) {
             echo '<p>' . htmlspecialchars($_GET['message']) . '</p>';
         }
         ?>
-    </div>
+        </div>
 
-    <div class="container">
-        <h2>Sign In</h2>
         <form action="login.php" method="POST">
             <div class="input-group">
                 <label for="email">Email</label>
@@ -88,13 +92,13 @@ if (isset($_POST["submit"])) {
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["user_name"] = $user["name"];
         $_SESSION["user_role"] = $user["role"];
-        if ($user["role"] === "admin") {
+        if ($user["role"] === "Admin") {
             header("Location: admin-dashboard.php");
             exit();
-        } else if ($user["role"] === "captain") {
+        } else if ($user["role"] === "Captain") {
             header("Location: create-team.php");
             exit();
-        } else if ($user["role"] === "member") {
+        } else if ($user["role"] === "Member") {
             header("Location: join-team.php");
             exit();
         } else {

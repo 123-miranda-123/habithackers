@@ -85,19 +85,25 @@ html {
 }
 
 h1 {
-  font-family: 'Poppins-SemiBold';
+  font-family: "Poppins", serif;
+  font-weight: 600;
+  font-style: normal;
   font-size: 50px;
   color: #fddc00;
   text-align: center;
 }
 
 h3 {
-  font-family: 'Poppins-SemiBold';
+  font-family: "Poppins", serif;
+  font-weight: 600;
+  font-style: normal;
   font-size: 40px;
   line-height: 50px;
 }
 
 p{
-  font-family: 'Poppins-Regular';
+  font-family: "Poppins", serif;
+  font-weight: 400;
+  font-style: normal;
 }
 

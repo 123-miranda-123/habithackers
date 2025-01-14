@@ -50,7 +50,9 @@ html {
   position: relative;
   bottom: 0;
   width: 100%;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", serif;
+  font-weight: 400;
+  font-style: normal;
   padding: 30px;
   }
   
