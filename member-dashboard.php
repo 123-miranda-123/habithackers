@@ -248,6 +248,49 @@ if ($result->num_rows > 0) {
 }
 ?>
 
+<?php
+$sql = "
+    SELECT 
+        user_id, 
+        habit_type_id, 
+        DATE(timestamp) AS progress_date, 
+        SUM(progress) AS total_progress
+    FROM 
+        user_habit_progress
+    GROUP BY 
+        user_id, 
+        habit_type_id, 
+        progress_date
+    ORDER BY 
+        user_id, 
+        habit_type_id, 
+        progress_date;
+";
+
+$result = $conn->query($sql);
+
+$data = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $user_id = $row['user_id'];
+        $habit_type_id = $row['habit_type_id'];
+
+        if (!isset($data[$user_id])) {
+            $data[$user_id] = [];
+        }
+
+        if (!isset($data[$user_id][$habit_type_id])) {
+            $data[$user_id][$habit_type_id] = ['dates' => [], 'progress' => []];
+        }
+
+        $data[$user_id][$habit_type_id]['dates'][] = $row['progress_date'];
+        $data[$user_id][$habit_type_id]['progress'][] = $row['total_progress'];
+    }
+}
+
+echo json_encode($data); // Return JSON for use in Chart.js
+?>
+
 
 
   <script>
@@ -282,6 +325,55 @@ if ($result->num_rows > 0) {
     }
   </script>
 
+<script>
+        // Fetch data from the PHP script
+        fetch('member-dashboard.php') // Replace with the actual PHP file path
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('charts-container');
+
+                // Loop through users
+                for (const [userId, habits] of Object.entries(data)) {
+                    // Loop through each habit for the user
+                    for (const [habitTypeId, habitData] of Object.entries(habits)) {
+                        const canvas = document.createElement('canvas');
+                        container.appendChild(canvas);
+
+                        new Chart(canvas, {
+                            type: 'line',
+                            data: {
+                                labels: habitData.dates, // Dates as X-axis
+                                datasets: [{
+                                    label: `User ${userId} - Habit ${habitTypeId}`,
+                                    data: habitData.progress, // Progress as Y-axis
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderWidth: 2
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Date'
+                                        }
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: 'Progress'
+                                        },
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching chart data:', error));
+    </script>
 
 </body>
 </html>
