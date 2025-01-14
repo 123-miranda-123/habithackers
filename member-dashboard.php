@@ -1,6 +1,10 @@
 <?php
 session_start();
 require_once "database.php";
+require_once "reset-progress.php";
+
+// Call the reset function when the page loads
+reset_progress();
 
 // Ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -282,9 +286,6 @@ while ($row = $result->fetch_assoc()) {
         'progress' => $total_progress
     ];
 }
-
-// Output the data as JSON
-echo "<script>var habitData = " . json_encode($data) . ";</script>";
 ?>
 </div>
   <script>
@@ -322,72 +323,67 @@ echo "<script>var habitData = " . json_encode($data) . ";</script>";
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+var habitData = <?php echo json_encode($data); ?>;
+
 window.onload = function () {
-    // Fetch data from PHP (ensure the PHP script is correct)
-    fetch('member-dashboard.php')
-        .then((response) => response.json())
-        .then((data) => {
-            // Loop through each habit_type_id and create a chart
-            Object.keys(data).forEach((habitTypeId) => {
-                const habitData = data[habitTypeId];
+    // Loop through each habit_type_id and create a chart
+    Object.keys(habitData).forEach((habitTypeId) => {
+        const habitDataArray = habitData[habitTypeId];
 
-                // Extract dates and progress values
-                const labels = habitData.map((entry) => entry.date);
-                const progressValues = habitData.map((entry) => entry.progress);
+        // Extract dates and progress values
+        const labels = habitDataArray.map((entry) => entry.date);
+        const progressValues = habitDataArray.map((entry) => entry.progress);
 
-                // Create a canvas for each habit type chart
-                const canvasId = `chart-habit-${habitTypeId}`;
-                const canvas = document.createElement("canvas");
-                canvas.id = canvasId;
+        // Create a new canvas for each habit type chart
+        const canvasId = `chart-habit-${habitTypeId}`;
+        const canvas = document.createElement("canvas");
+        canvas.id = canvasId;
 
-                // Append to the charts-container div
-                document.getElementById('charts-container').appendChild(canvas);
+        // Append to the charts-container div
+        document.getElementById('charts-container').appendChild(canvas);
 
-                // Chart.js configuration for each habit
-                const ctx = document.getElementById(canvasId).getContext("2d");
-                new Chart(ctx, {
-                    type: "bar", // Change to "line" or other chart types if needed
-                    data: {
-                        labels: labels, // X-axis (dates)
-                        datasets: [{
-                            label: `Progress for Habit Type ${habitTypeId}`,
-                            data: progressValues, // Y-axis (progress values)
-                            backgroundColor: "rgba(54, 162, 235, 0.6)",
-                            borderColor: "rgba(54, 162, 235, 1)",
-                            borderWidth: 1
-                        }]
+        // Chart.js configuration for each habit
+        const ctx = document.getElementById(canvasId).getContext("2d");
+        new Chart(ctx, {
+            type: "bar", // Change to "bar" if you prefer a bar chart
+            data: {
+                labels: labels, // X-axis (dates)
+                datasets: [{
+                    label: `Progress for Habit ${habitTypeId}`,  // Customize label
+                    data: progressValues, // Y-axis (progress values)
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)', // Bar color
+                    borderColor: 'rgba(54, 162, 235, 1)',  // Border color
+                    tension: 0.1,  // Smoothness of the line
+                    borderWidth: 2  // Line width
+                }]
+            },
+            options: {
+                responsive: true,  // Make the chart responsive
+                plugins: {
+                    legend: {
+                        display: true,
                     },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: true,
-                            },
-                        },
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: "Date",
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: "Progress",
-                                }
-                            },
-                        },
-                    }
-                });
-            });
-        })
-        .catch((error) => {
-            console.error("Error loading chart data:", error);
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date',  // X-axis title
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,  // Start Y-axis from zero
+                        title: {
+                            display: true,
+                            text: 'Progress',  // Y-axis title
+                        }
+                    },
+                },
+            }
         });
+    });
 }
-
+</script>
 </script>
 
 
