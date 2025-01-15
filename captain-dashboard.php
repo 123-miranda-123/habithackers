@@ -1,8 +1,8 @@
-<ta?php
+<?php
     session_start();
     require_once("database.php");
     
-    if (strtolower($_SESSION["user_role"]) !== "captain") {
+    if (($_SESSION["user_role"]) !== "Captain") {
         header("Location: index.php");
     }
 
@@ -15,6 +15,39 @@ if (!isset($_SESSION['user_id'])) {
     if ($conn->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
+
+    $user_id = $_SESSION['user_id'];
+    $user_name = $_SESSION['user_name'];
+
+
+    $sql = "SELECT id FROM teams WHERE captain_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        // User is captain of a team, fetch team details
+        $team_row = $result->fetch_assoc();
+        $team_id = $team_row['id'];
+    
+        // Fetch the team name
+        $sql_team = "SELECT name FROM teams WHERE id = ?";
+        $stmt_team = $conn->prepare($sql_team);
+        $stmt_team->bind_param("i", $team_id);
+        $stmt_team->execute();
+        $result_team = $stmt_team->get_result();
+        $team_name = '';
+    
+        if ($result_team->num_rows > 0) {
+            $team_data = $result_team->fetch_assoc();
+            $team_name = $team_data['name'];
+        }
+    } else {
+        // User is not part of any team
+        $team_name = "No team created yet.";
+    }
+    ?>
 ?>
 
 <!DOCTYPE html>
@@ -50,21 +83,23 @@ if (!isset($_SESSION['user_id'])) {
     </nav>
 
     <section class = "container">
-        <h1>Captain Dashboard</h1>
-        <h2>Team Members</h2>
+        
+    <h2>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h2>
+    <h1>Captain Dashboard</h1>
 
+        <div id = "title">
+        <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
+        <p>Team ID: <?php echo htmlspecialchars($team_id); ?></p>
+        </div>
+
+
+        <h2>Team Members</h2>
         <table class = "users-table">
             <tr>
-                <th>Name</th>
+                <th>User ID</th>
+                <th>Member Name</th>
                 <th>Email</th>
-                <th>Role</th>
                 <th>Actions</th>
-            </tr>
-            <tr>
-                <td>John Doe</td>
-                <td>doe@gmail.com</td>
-                <td>Team Captain</td>
-                <td>Actions</td>
             </tr>
         
         <?php
@@ -80,20 +115,102 @@ if (!isset($_SESSION['user_id'])) {
                 <td id = 'user-id'>" . $row["id"] . "</td>
                 <td>" . $row["name"] . "</td>
                 <td>" . $row["email"] . "</td>
-                <td>" . $row["role"] . "</td>
                 <td>
                   
                     <button id = 'edit' onclick = openEdit(".$row["id"].")>Edit</button>
-                    <button id = 'delete' onclick = openDelete(".$row["id"].")>Delete</button>
+                    <button id = 'delete' onclick = openDelete(".$row["id"].")>Remove</button>
                   
                 </td>
             </tr>"; 
             }
         ?>
         </table>
+    
+        <button class="open-btn" onclick="openPopup()">+ Create a New Team Habit</button>
+        <?
+        $sql = "SELECT user_habits.*, habit_types.habit_name, habit_types.unit 
+        FROM user_habits
+        JOIN habit_types ON user_habits.habit_type_id = habit_types.id
+        WHERE user_habits.user_id = ?";
+
+$stmt = $conn->prepare($sql);
+// Bind the user_id parameter from the session to the query
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
+
+echo "<h2>Your Habit Logs</h2>";
+
+if ($result->num_rows > 0) {
+    echo "<table>";
+    echo "<tr><th>Habit Type</th>
+    <th>Your Progress</th>
+    <th>Time Frame</th>
+    <th>Team Goal</th>
+    <th>Company Goal</th>
+    <th>Actions</th></tr>";
+
+    // Loop through the results and display the habit type with goal and progress
+    while ($row = $result->fetch_assoc()) {
+        // Fetch team goal and company goal
+        $habit_name = $row['habit_name'];
+        $unit = $row['unit'];
+
+        // Fetch team goal
+        $team_goal_sql = "SELECT goal FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
+        WHERE habit_name = ? AND team_id = ?";
+        $team_stmt = $conn->prepare($team_goal_sql);
+        $team_stmt->bind_param("si", $habit_name, $_SESSION['team_id']); // assuming team_id is stored in session
+        $team_stmt->execute();
+        $team_goal_result = $team_stmt->get_result();
+        if ($team_goal_result->num_rows > 0) {
+            $team_goal = $team_goal_result->fetch_assoc()['goal'];
+        } else {
+            $team_goal = null;
+        }
+        
+
+        // Fetch company goal
+        $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
+        $company_stmt = $conn->prepare($company_goal_sql);
+        $company_stmt->bind_param("s", $habit_name);
+        $company_stmt->execute();
+        $company_goal_result = $company_stmt->get_result();
+        if ($company_goal_result->num_rows > 0) {
+            $company_goal = $company_goal_result->fetch_assoc()['goal'];
+        } else {
+            $company_goal = null;
+        }
+    
+        $progress_percentage = ($row['progress'] / $row['goal']) * 100;
+        $progress_percentage = min(100, $progress_percentage); // Make sure it doesn't exceed 100%
 
 
+        echo "<tr>";
+        echo "<td>" . $row['habit_name'] . "</td>";
+        echo "<td>
+                <div class='progress-bar'>
+                    <div class='progress' style='width: " . $progress_percentage . "%;'></div>
+                </div>
+                " . $row['progress'] . " " . $row['unit'] . " / " . $row['goal'] . " " . $row['unit'] . "
+              </td>";
+        echo "<td>" . $row['time_frame'] . "</td>";
+        echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
+        echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
+        echo "<td>
+                <button id = 'set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
+                <button id = 'enter-progress' class='open-btn' onclick='openPopup3(".$row['habit_type_id'].")'>Enter Progress</button>
+                <button id = 'delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
+              </td>";
+        echo "<input type='hidden' name='habit_type_id' value='" . $row['habit_type_id'] . "'>";
+        echo "</tr>";
+    }
 
+    echo "</table>";
+} else {
+    echo "<p>No habits found for this user. Please add some habits.</p>";
+}
+?>
     </section>
 </body>
 </html>

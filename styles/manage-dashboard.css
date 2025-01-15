@@ -129,6 +129,13 @@ a {
   color: white;
 }
 
+p {
+  font-family: "Poppins", serif;
+  font-weight: 500;
+  font-style: normal;
+  color: #333;
+}
+
 .add {
   margin-bottom: 10px;
 }

@@ -75,9 +75,10 @@ if ($result->num_rows > 0) {
 </nav>
 <section class="container">
     <div id = "title">
-        <h1>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h1>
-        <h1>Team: <?php echo htmlspecialchars($team_name); ?></p>
+        <h2>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h2>
+        <h1>Member Dashboard</p>
     </div>
+        <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
     <button class="open-btn" onclick="openPopup()">+ Create a New Habit</button>
 
     <?php
@@ -215,7 +216,7 @@ $result_habit_type = $conn->query($sql_habit_type);
                 <h2>Update Goal</h2>
 
                 <div class="input-group">
-                    <label for="number">Frequency (Goal)</label>
+                    <label for="goal">Frequency (Goal)</label>
                     <input type="number" id="goal" name="goal" required>
                 </div>
 
@@ -253,7 +254,7 @@ $result_habit_type = $conn->query($sql_habit_type);
     </form>
     </div>
     </div>
-
+<h2>Your Progress Visualization</h2>
 
 <div id="charts-container">
 <?php
@@ -338,8 +339,6 @@ while ($row = $result->fetch_assoc()) {
   </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<h2>Your Progress Visualization</h2>"
 
 <script>
 var habitData = <?php echo json_encode($data); ?>;

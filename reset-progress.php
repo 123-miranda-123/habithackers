@@ -48,7 +48,6 @@ function reset_user_habits($current_day, $current_day_of_week, $current_day_of_m
 
         if ($time_frame === 'Daily' && $current_day !== $last_updated_date) {
             $should_reset = true;
-
         } elseif ($time_frame === 'Weekly' && $current_day_of_week == 1 && $last_updated_date !== $current_day) {
             $should_reset = true;
         } elseif ($time_frame === 'Monthly' && $current_day_of_month == 1 && $last_updated_date !== $current_day) {

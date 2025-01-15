@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
-if (!isset($_SESSION["typ_id"])) {
+if (!isset($_GET["type_id"])) {
     header("Location: member-dashboard.php");
     exit();
 }
@@ -31,15 +31,10 @@ if (isset($_POST['submit'])) {
         exit();
     }
 
-    $sql = "UPDATE user_habits SET progress = progress + ?, last_updated = NOW() WHERE user_id = ? AND habit_type_id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iii", $progress, $_SESSION['user_id'], $habit_type_id);
-
     // Update the goal in the `user_habits` table
     $sql = "UPDATE user_habits SET goal = ?, time_frame = ?, last_updated = NOW() WHERE user_id = ? AND habit_type_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isii", $goal, $time_frame, $_SESSION['user_id'], $habit_type_id);
-);
+    $stmt->bind_param("isii", $goal, $time_frame, $user_id, $habit_type_id);
 
     if ($stmt->execute()) {
         // Redirect back to the member dashboard after success
