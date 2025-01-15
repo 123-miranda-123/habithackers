@@ -111,7 +111,6 @@ if ($conn->connect_error) {
                 <th>Team ID</th>
                 <th>Team Name</th>
                 <th>Team Captain </th>
-                <th>Role</th>
                 <th>Actions</th>
             </tr>
             <?php 

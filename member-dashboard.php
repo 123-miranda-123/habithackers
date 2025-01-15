@@ -3,6 +3,9 @@ session_start();
 require_once "database.php";
 require_once "reset-progress.php";
 
+// Call the reset function when the page loads
+reset_progress();
+
 // Ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
     // Redirect to login page if user is not logged in
@@ -49,7 +52,6 @@ if ($result->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Dashboard - Habit Hub</title>
-    
     <link href="styles/header.css" rel="stylesheet" type="text/css"/>
     <link href="styles/member-dashboard.css" rel="stylesheet" type="text/css"/>
     <link rel="icon" href="images/icon.png" type="image/png">
@@ -60,109 +62,114 @@ if ($result->num_rows > 0) {
 </head>
 <body>
 <nav class="header">
-    <div class="header-container">
-        <a href="index.php">
-            <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
-        </a>
-        <div class="auth-buttons">
-            <a href ="leaderboard.php" id="leaderboard">Leaderboard</a>
-            <a href="help.html" id="help">Help</a>
-            <a href="user-profile.php" id="user-profile">User Profile</a>
-            <a href="logout.php" id="logout">Logout</a>
+        <div class="header-container">
+            <a href="index.php">
+                <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
+            </a>
+            <div class="auth-buttons">
+                <a href ="leaderboard.php" id="leaderboard">Leaderboard</a>
+                <a href="help.html" id="help">Help</a>
+                <a href="logout.php" id="logout">Logout</a>
+            </div>
         </div>
-    </div>
 </nav>
-
 <section class="container">
     <div id = "title">
         <h2>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h2>
-        <h1>Member Dashboard</h1>
+        <h1>Member Dashboard</p>
     </div>
-    <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
+        <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
     <button class="open-btn" onclick="openPopup()">+ Create a New Habit</button>
 
     <?php
-    // Fetch user's habits from the user_habits table
-    $sql = "SELECT user_habits.*, habit_types.habit_name, habit_types.unit 
-            FROM user_habits
-            JOIN habit_types ON user_habits.habit_type_id = habit_types.id
-            WHERE user_habits.user_id = ?";
+// Fetch user's habits from the user_habits table
+$sql = "SELECT user_habits.*, habit_types.habit_name, habit_types.unit 
+        FROM user_habits
+        JOIN habit_types ON user_habits.habit_type_id = habit_types.id
+        WHERE user_habits.user_id = ?";
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
+$stmt = $conn->prepare($sql);
+// Bind the user_id parameter from the session to the query
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    echo "<h2>Your Habit Logs</h2>";
+echo "<h2>Your Habit Logs</h2>";
 
-    if ($result->num_rows > 0) {
-        echo "<table>";
-        echo "<tr><th>Habit Type</th>
-        <th>Your Progress</th>
-        <th>Time Frame</th>
-        <th>Team Goal</th>
-        <th>Company Goal</th>
-        <th>Actions</th></tr>";
+if ($result->num_rows > 0) {
+    echo "<table>";
+    echo "<tr><th>Habit Type</th>
+    <th>Your Progress</th>
+    <th>Time Frame</th>
+    <th>Team Goal</th>
+    <th>Company Goal</th>
+    <th>Actions</th></tr>";
 
-        while ($row = $result->fetch_assoc()) {
-            // Fetch team goal and company goal
-            $habit_name = $row['habit_name'];
-            $unit = $row['unit'];
+    // Loop through the results and display the habit type with goal and progress
+    while ($row = $result->fetch_assoc()) {
+        // Fetch team goal and company goal
+        $habit_name = $row['habit_name'];
+        $unit = $row['unit'];
 
-            // Fetch team goal
-            $team_goal_sql = "SELECT goal FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
-            WHERE habit_name = ? AND team_id = ?";
-            $team_stmt = $conn->prepare($team_goal_sql);
-            $team_stmt->bind_param("si", $habit_name, $_SESSION['team_id']);
-            $team_stmt->execute();
-            $team_goal_result = $team_stmt->get_result();
-            if ($team_goal_result->num_rows > 0) {
-                $team_goal = $team_goal_result->fetch_assoc()['goal'];
-            } else {
-                $team_goal = null;
-            }
-
-            // Fetch company goal
-            $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
-            $company_stmt = $conn->prepare($company_goal_sql);
-            $company_stmt->bind_param("s", $habit_name);
-            $company_stmt->execute();
-            $company_goal_result = $company_stmt->get_result();
-            if ($company_goal_result->num_rows > 0) {
-                $company_goal = $company_goal_result->fetch_assoc()['goal'];
-            } else {
-                $company_goal = null;
-            }
-
-            $progress_percentage = ($row['progress'] / $row['goal']) * 100;
-            $progress_percentage = min(100, $progress_percentage); // Ensure max of 100%
-
-            echo "<tr>";
-            echo "<td>" . $row['habit_name'] . "</td>";
-            echo "<td>
-                    <div class='progress-bar'>
-                        <div class='progress' style='width: " . $progress_percentage . "%;'></div>
-                    </div>
-                    " . $row['progress'] . " " . $row['unit'] . " / " . $row['goal'] . " " . $row['unit'] . "
-                  </td>";
-            echo "<td>" . $row['time_frame'] . "</td>";
-            echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
-            echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
-            echo "<td>
-                    <button id = 'set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
-                    <button id = 'enter-progress' class='open-btn' onclick='openPopup3(".$row['habit_type_id'].")'>Enter Progress</button>
-                    <button id = 'delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
-                  </td>";
-            echo "<input type='hidden' name='habit_type_id' value='" . $row['habit_type_id'] . "'>";
-            echo "</tr>";
+        // Fetch team goal
+        $team_goal_sql = "SELECT goal FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
+        WHERE habit_name = ? AND team_id = ?";
+        $team_stmt = $conn->prepare($team_goal_sql);
+        $team_stmt->bind_param("si", $habit_name, $_SESSION['team_id']); // assuming team_id is stored in session
+        $team_stmt->execute();
+        $team_goal_result = $team_stmt->get_result();
+        if ($team_goal_result->num_rows > 0) {
+            $team_goal = $team_goal_result->fetch_assoc()['goal'];
+        } else {
+            $team_goal = null;
         }
+        
 
-        echo "</table>";
-    } else {
-        echo "<p>No habits found for this user. Please add some habits.</p>";
+        // Fetch company goal
+        $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
+        $company_stmt = $conn->prepare($company_goal_sql);
+        $company_stmt->bind_param("s", $habit_name);
+        $company_stmt->execute();
+        $company_goal_result = $company_stmt->get_result();
+        if ($company_goal_result->num_rows > 0) {
+            $company_goal = $company_goal_result->fetch_assoc()['goal'];
+        } else {
+            $company_goal = null;
+        }
+    
+        $progress_percentage = ($row['progress'] / $row['goal']) * 100;
+        $progress_percentage = min(100, $progress_percentage); // Make sure it doesn't exceed 100%
+
+
+        echo "<tr>";
+        echo "<td>" . $row['habit_name'] . "</td>";
+        echo "<td>
+                <div class='progress-bar'>
+                    <div class='progress' style='width: " . $progress_percentage . "%;'></div>
+                </div>
+                " . $row['progress'] . " " . $row['unit'] . " / " . $row['goal'] . " " . $row['unit'] . "
+              </td>";
+        echo "<td>" . $row['time_frame'] . "</td>";
+        echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
+        echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
+        echo "<td>
+                <button id = 'set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
+                <button id = 'enter-progress' class='open-btn' onclick='openPopup3(".$row['habit_type_id'].")'>Enter Progress</button>
+                <button id = 'delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
+              </td>";
+        echo "<input type='hidden' name='habit_type_id' value='" . $row['habit_type_id'] . "'>";
+        echo "</tr>";
     }
-    ?>
 
+    echo "</table>";
+} else {
+    echo "<p>No habits found for this user. Please add some habits.</p>";
+}
+?>
+<?php
+$sql_habit_type = "SELECT * FROM habit_types"; 
+$result_habit_type = $conn->query($sql_habit_type);
+?>
     <div id="overlay" class="overlay">
     <div class="popup">
     <form action="create-habit.php" method="POST">
@@ -194,4 +201,213 @@ if ($result->num_rows > 0) {
             </div>
 
             <div>
-              <button class="cancel-btn" onclick
+              <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+              <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
+            </div>
+
+            
+    </form>
+    </div>
+    </div>
+
+    <div id="overlay2" class="overlay"> "
+        <div class="popup">
+            <form action=<?php echo "set-goal.php?type_id=".urlencode($_GET["type_id"]); ?> method="POST">
+                <h2>Update Goal</h2>
+
+                <div class="input-group">
+                    <label for="goal">Frequency (Goal)</label>
+                    <input type="number" id="goal" name="goal" required>
+                </div>
+
+                <div class="input-group">
+                    <select name="time-interval" id="time-interval" class="dropdown" required>
+                        <option value="" disabled selected>Select Time Interval</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button class="cancel-btn" onclick="closePopup2()">Cancel</button>
+                    <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="overlay3" class="overlay">
+    <div class="popup">
+    <form action=<?php echo "enter-progress.php?type_id=".urlencode($_GET["type_id"]); ?> method="POST">
+          <h2>Enter Progress</h2>
+
+            <div class="input-group">
+                <label for="progress">Enter Progress</label>
+                <input type="number" id="progress" name="progress" required>
+            </div>
+
+            <div>
+                <button class="cancel-btn" onclick="closePopup3()">Cancel</button>
+                <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
+            </div>
+    </form>
+    </div>
+    </div>
+<p></p>
+<h2>Your Progress Visualization</h2>
+
+<div id="charts-container">
+<?php
+// Query to aggregate progress by date for each user and habit type
+$sql = "SELECT user_id, habit_type_id, DATE(timestamp) as date, SUM(progress) as total_progress
+    FROM user_habit_progress
+    WHERE user_id = ? 
+    GROUP BY user_id, habit_type_id, DATE(timestamp)
+    ORDER BY DATE(timestamp)
+";
+
+// Assuming you have a session with user ID stored in `$_SESSION['user_id']`
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION['user_id']); // Use the logged-in user's ID
+$stmt->execute();
+$result = $stmt->get_result();
+
+$data = [];
+while ($row = $result->fetch_assoc()) {
+    $habit_type_id = $row['habit_type_id'];
+    $date = $row['date'];
+    $total_progress = $row['total_progress'];
+
+    // Format the data into a structure where habit_type_id is the key
+    if (!isset($data[$habit_type_id])) {
+        $data[$habit_type_id] = [];
+    }
+
+    $data[$habit_type_id][] = [
+        'date' => $date,
+        'progress' => $total_progress
+    ];
+}
+?>
+</div>
+  <script>
+    <?php
+      if (isset($_GET["type_id"]) && isset($_GET["action"])) {
+        if ($_GET["action"] == "set-goal") {
+          echo 
+          "document.getElementById('overlay2').style.display = 'flex';
+          document.getElementById('main-content2').classList.add('greyed-out');";
+        } else if ($_GET["action"] == "enter-progress") {
+          echo 
+          "document.getElementById('overlay3').style.display = 'flex';
+        document.getElementById('main-content3').classList.add('greyed-out');";
+        }
+      }
+    ?>
+    function openPopup() {
+      document.getElementById('overlay').style.display = 'flex';
+      document.getElementById('main-content').classList.add('greyed-out');
+    }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('main-content').classList.remove('greyed-out');
+    }
+
+    function openPopup2(habit_type_id) {
+      window.location.href = 'member-dashboard.php?type_id=' + habit_type_id + "&action=set-goal";
+      
+    }
+
+    function closePopup2() {
+      document.getElementById('overlay2').style.display = 'none';
+      document.getElementById('main-content2').classList.remove('greyed-out');
+      window.location.href = 'member-dashboard.php';
+      
+    }
+
+    function openPopup3(habit_type_id) {
+      window.location.href = 'member-dashboard.php?type_id=' + habit_type_id + "&action=enter-progress";
+      
+    }
+
+    function closePopup3() {
+      document.getElementById('overlay3').style.display = 'none';
+      document.getElementById('main-content3').classList.remove('greyed-out');
+      window.location.href = 'member-dashboard.php';
+    }
+  </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+var habitData = <?php echo json_encode($data); ?>;
+
+window.onload = function () {
+    // Loop through each habit_type_id and create a chart
+    Object.keys(habitData).forEach((habitTypeId) => {
+        const habitDataArray = habitData[habitTypeId];
+
+        // Extract dates and progress values
+        const labels = habitDataArray.map((entry) => entry.date);
+        const progressValues = habitDataArray.map((entry) => entry.progress);
+
+        // Create a new canvas for each habit type chart
+        const canvasId = `chart-habit-${habitTypeId}`;
+        const canvas = document.createElement("canvas");
+        canvas.id = canvasId;
+
+        // Append to the charts-container div
+        document.getElementById('charts-container').appendChild(canvas);
+
+        // Chart.js configuration for each habit
+        const ctx = document.getElementById(canvasId).getContext("2d");
+        new Chart(ctx, {
+            type: "bar", // Change to "bar" if you prefer a bar chart
+            data: {
+                labels: labels, // X-axis (dates)
+                datasets: [{
+                    label: `Progress for Habit ${habitTypeId}`,  // Customize label
+                    data: progressValues, // Y-axis (progress values)
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)', // Bar color
+                    borderColor: 'rgba(54, 162, 235, 1)',  // Border color
+                    tension: 0.1,  // Smoothness of the line
+                    borderWidth: 2  // Line width
+                }]
+            },
+            options: {
+                responsive: true,  // Make the chart responsive
+                plugins: {
+                    legend: {
+                        display: true,
+                    },
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date',  // X-axis title
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,  // Start Y-axis from zero
+                        title: {
+                            display: true,
+                            text: 'Progress',  // Y-axis title
+                        }
+                    },
+                },
+            }
+        });
+    });
+}
+</script>
+</script>
+
+
+</body>
+</html>
+</section>
+</body>
+</html>
