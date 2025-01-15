@@ -155,6 +155,7 @@ if (isset($_POST["submit"])) {
             $stmt->bind_param("ssss", $name, $email, $passwordHash, $role); // Bind values into the SQL command
             if ($stmt->execute()) { // Execute the statement
                 header("Location: register.php?message=" . urlencode("Registration successful!"));
+                header("Location: login.php");
                 exit();
             } else {
                 header("Location: register.php?message=" . urlencode("Error executing query: " . $stmt->error));
@@ -164,7 +165,7 @@ if (isset($_POST["submit"])) {
             header("Location: register.php?message=" . urlencode("Error preparing statement: " . $conn->error));
             exit();
         }
-         
+        
         }
     }
 }
