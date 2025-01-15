@@ -42,10 +42,45 @@ if ($result->num_rows > 0) {
         $team_data = $result_team->fetch_assoc();
         $team_name = $team_data['name'];
     }
+<<<<<<< Updated upstream
 } else {
     // User is not part of any team
     $team_name = "No team created yet.";
 }
+=======
+
+    $user_id = $_SESSION['user_id'];
+    $user_name = $_SESSION['user_name'];
+
+
+    $sql = "SELECT id FROM teams WHERE captain_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        // User is captain of a team, fetch team details
+        $team_row = $result->fetch_assoc();
+        $team_id = $team_row['id'];
+    
+        // Fetch the team name
+        $sql_team = "SELECT name FROM teams WHERE id = ?";
+        $stmt_team = $conn->prepare($sql_team);
+        $stmt_team->bind_param("i", $team_id);
+        $stmt_team->execute();
+        $result_team = $stmt_team->get_result();
+        $team_name = '';
+    
+        if ($result_team->num_rows > 0) {
+            $team_data = $result_team->fetch_assoc();
+            $team_name = $team_data['name'];
+        }
+    } else {
+        // User is not part of any team
+        $team_name = "No team created yet.";
+    }
+>>>>>>> Stashed changes
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,11 +96,14 @@ if ($result->num_rows > 0) {
     </style>
 </head>
 <body>
+<<<<<<< Updated upstream
     <script>
         function openEdit(id) {
             window.location.href = 'edit-user.php?id=' + encodeURIComponent(id);
         }
     </script>
+=======
+>>>>>>> Stashed changes
     <nav class="header">
         <div class="header-container">
             <a href="index.php">
@@ -116,12 +154,13 @@ if ($result->num_rows > 0) {
                     <button id='edit' onclick='openEdit(".$row["id"].")'>Edit</button>
                     <button id='delete' onclick='openDelete(".$row["id"].")'>Remove</button>
                 </td>
-            </tr>"; 
+            </tr>";
             }
         ?>
         </table>
 
         <button class="open-btn" onclick="openPopup()">+ Create a New Team Habit</button>
+<<<<<<< Updated upstream
 
         <?php
         $sql = "SELECT user_habits.*, habit_types.habit_name, habit_types.unit 
@@ -131,12 +170,24 @@ if ($result->num_rows > 0) {
 
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $_SESSION['user_id']);
+=======
+        <?php
+        $sql = "SELECT team_habits.*, habit_types.habit_name, habit_types.unit 
+        FROM team_habits
+        JOIN habit_types ON team_habits.habit_type_id = habit_types.id
+        WHERE team_habits.team_id = ?";
+
+        $stmt = $conn->prepare($sql);
+        // Bind the team_id parameter from the session to the query
+        $stmt->bind_param("i", $team_id);
+>>>>>>> Stashed changes
         $stmt->execute();
         $result = $stmt->get_result();
 
         echo "<h2>Your Habit Logs</h2>";
 
         if ($result->num_rows > 0) {
+<<<<<<< Updated upstream
             echo "<table>";
             echo "<tr><th>Habit Type</th>
             <th>Your Progress</th>
@@ -144,6 +195,14 @@ if ($result->num_rows > 0) {
             <th>Team Goal</th>
             <th>Company Goal</th>
             <th>Actions</th></tr>";
+=======
+        echo "<table>";
+        echo "<tr><th>Habit Type</th>
+        <th>Time Frame</th>
+        <th>Team Progress</th>
+        <th>Company Progress</th>
+        <th>Actions</th></tr>";
+>>>>>>> Stashed changes
 
             while ($row = $result->fetch_assoc()) {
                 $habit_name = $row['habit_name'];
@@ -193,7 +252,154 @@ if ($result->num_rows > 0) {
         } else {
             echo "<p>No habits found for this user. Please add some habits.</p>";
         }
+<<<<<<< Updated upstream
         ?>
+=======
+        
+
+        // Fetch company goal
+        $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
+        $company_stmt = $conn->prepare($company_goal_sql);
+        $company_stmt->bind_param("s", $habit_name);
+        $company_stmt->execute();
+        $company_goal_result = $company_stmt->get_result();
+        if ($company_goal_result->num_rows > 0) {
+            $company_goal = $company_goal_result->fetch_assoc()['goal'];
+        } else {
+            $company_goal = null;
+        }
+    
+        $progress_percentage = ($row['progress'] / $row['goal']) * 100;
+        $progress_percentage = min(100, $progress_percentage); // Make sure it doesn't exceed 100%
+
+        echo "<tr>";
+        echo "<td>" . $row['habit_name'] . "</td>";
+        echo "<td>
+                <div class='progress-bar'>
+                    <div class='progress' style='width: " . $progress_percentage . "%;'></div>
+                </div>
+                " . $row['progress'] . " " . $row['unit'] . " / " . $row['goal'] . " " . $row['unit'] . "
+              </td>";
+        echo "<td>" . $row['time_frame'] . "</td>";
+        echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
+        echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
+        echo "<td>
+                <button id = 'set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
+                <button id = 'delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
+              </td>";
+        echo "<input type='hidden' name='habit_type_id' value='" . $row['habit_type_id'] . "'>";
+        echo "</tr>";
+    }
+    
+
+    echo "</table>";
+} else {
+    echo "<p>No team habits found. Please create some habits for your team.</p>";
+}
+?>
+
+<?php
+$sql_habit_type = "SELECT * FROM habit_types"; 
+$result_habit_type = $conn->query($sql_habit_type);
+?>
+    <div id="overlay" class="overlay">
+    <div class="popup">
+    <form action="create-teamhabit.php" method="POST">
+          <h2>Create a New Team Habit</h2>
+
+            <div class="input-group">
+                <label for="number">Frequency (Goal)</label>
+                <input type="number" id="goal" name="goal" required>
+            </div>
+
+            <div class="input-group">
+                <select name="habit-type" id="habit-type" class = "dropdown" required>
+                <option value="" disabled selected>Select Habit Type</option>
+                <?php while ($row_habit_type = $result_habit_type->fetch_assoc()) { ?>
+            <option value="<?php echo $row_habit_type['habit_name']; ?>" data-unit="<?php echo $row_habit_type['unit']; ?>">
+                <?php echo $row_habit_type['habit_name'] . " (" . $row_habit_type['unit'] . ")"; ?>
+            </option>
+            <?php } ?>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <select name="time-interval" id="time-interval" class = "dropdown" required>
+                    <option value="" disabled selected>Select Time Interval</option>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                </select>
+            </div>
+
+            <div>
+              <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+              <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
+            </div>
+
+            
+    </form>
+    </div>
+    </div>
+
+    <div id="overlay2" class="overlay"> "
+        <div class="popup">
+            <form action=<?php echo "set-teamgoal.php?type_id=".urlencode($_GET["type_id"]); ?> method="POST">
+                <h2>Update Goal</h2>
+
+                <div class="input-group">
+                    <label for="goal">Frequency (Goal)</label>
+                    <input type="number" id="goal" name="goal" required>
+                </div>
+
+                <div class="input-group">
+                    <select name="time-interval" id="time-interval" class="dropdown" required>
+                        <option value="" disabled selected>Select Time Interval</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button class="cancel-btn" onclick="closePopup2()">Cancel</button>
+                    <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    <?php
+      if (isset($_GET["type_id"]) && isset($_GET["action"])) {
+        if ($_GET["action"] == "set-goal") {
+          echo 
+          "document.getElementById('overlay2').style.display = 'flex';
+          document.getElementById('main-content2').classList.add('greyed-out');";
+        } 
+      }
+    ?>
+    function openPopup() {
+      document.getElementById('overlay').style.display = 'flex';
+      document.getElementById('main-content').classList.add('greyed-out');
+    }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('main-content').classList.remove('greyed-out');
+    }
+
+    function openPopup2(habit_type_id) {
+      window.location.href = 'captain-dashboard.php?type_id=' + habit_type_id + "&action=set-goal";
+    }
+
+    function closePopup2() {
+      document.getElementById('overlay2').style.display = 'none';
+      document.getElementById('main-content2').classList.remove('greyed-out');
+      window.location.href = 'captain-dashboard.php';
+      
+    }
+>>>>>>> Stashed changes
     </section>
 </body>
 </html>
