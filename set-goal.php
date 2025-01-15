@@ -16,13 +16,14 @@ if (!isset($_SESSION["typ_id"])) {
 if (isset($_POST['submit'])) {
     // Sanitize and fetch form values
     $user_id = $_SESSION['user_id'];
-    $goal = intval($_POST['goal']); // New goal frequency
+    $goal = $_POST['goal']; // New goal frequency
     $time_frame = $_POST['time-interval']; // New time interval
+
     if (isset($_GET['type_id']) && is_numeric($_GET['type_id'])) {
         $habit_type_id = $_GET['type_id'];
     } else {
         // Handle error or invalid input
-        die("Invalid habit type.");
+        exit("Invalid habit type.");
     }
 
     if ($goal <= 0) {
@@ -30,10 +31,15 @@ if (isset($_POST['submit'])) {
         exit();
     }
 
-    // Update the goal in the `user_habits` table
-    $sql = "UPDATE user_habits SET goal = ?, time_frame = ?, last_updated = NOW() WHERE habit_type_id = ? AND user_id = ?";
+    $sql = "UPDATE user_habits SET progress = progress + ?, last_updated = NOW() WHERE user_id = ? AND habit_type_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isii", $goal, $time_frame, $habit_type_id, $user_id);
+    $stmt->bind_param("iii", $progress, $_SESSION['user_id'], $habit_type_id);
+
+    // Update the goal in the `user_habits` table
+    $sql = "UPDATE user_habits SET goal = ?, time_frame = ?, last_updated = NOW() WHERE user_id = ? AND habit_type_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isii", $goal, $time_frame, $_SESSION['user_id'], $habit_type_id);
+);
 
     if ($stmt->execute()) {
         // Redirect back to the member dashboard after success

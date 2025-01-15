@@ -31,7 +31,7 @@ if (isset($_POST['submit'])) {
         $habit_type_id = $_GET['type_id'];
     } else {
         // Handle error or invalid input
-        die("Invalid habit type.");
+        exit("Invalid habit type.");
     }
     
     if ($progress <= 0) {
