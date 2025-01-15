@@ -215,7 +215,7 @@ $result_habit_type = $conn->query($sql_habit_type);
                 <h2>Update Goal</h2>
 
                 <div class="input-group">
-                    <label for="number">Frequency (Goal)</label>
+                    <label for="goal">Frequency (Goal)</label>
                     <input type="number" id="goal" name="goal" required>
                 </div>
 
@@ -254,6 +254,7 @@ $result_habit_type = $conn->query($sql_habit_type);
     </div>
     </div>
 
+<h2>Your Progress Visualization</h2>
 
 <div id="charts-container">
 <?php
@@ -338,8 +339,6 @@ while ($row = $result->fetch_assoc()) {
   </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<h2>Your Progress Visualization</h2>"
 
 <script>
 var habitData = <?php echo json_encode($data); ?>;
