@@ -211,7 +211,7 @@ $result_habit_type = $conn->query($sql_habit_type);
 
     <div id="overlay2" class="overlay"> "
         <div class="popup">
-            <form action="set-goal.php" method="POST">
+            <form action=<?php echo "set-goal.php?type_id=".urlencode($_GET["type_id"]); ?> method="POST">
                 <h2>Update Goal</h2>
 
                 <div class="input-group">
@@ -229,8 +229,6 @@ $result_habit_type = $conn->query($sql_habit_type);
                 </div>
 
                 <div>
-                <?php while ($row = $result->fetch_assoc()) {
-                    echo "<input type='hidden' name='habit_type_id' value='" . $row['habit_type_id'] . "'>";};?>
                     <button class="cancel-btn" onclick="closePopup2()">Cancel</button>
                     <button class="submit-btn" id="submit" type="submit" name="submit">Submit</button>
                 </div>
@@ -299,8 +297,9 @@ while ($row = $result->fetch_assoc()) {
           "document.getElementById('overlay2').style.display = 'flex';
           document.getElementById('main-content2').classList.add('greyed-out');";
         } else if ($_GET["action"] == "enter-progress") {
-          echo "document.getElementById('overlay3').style.display = 'flex';
-      document.getElementById('main-content3').classList.add('greyed-out');";
+          echo 
+          "document.getElementById('overlay3').style.display = 'flex';
+        document.getElementById('main-content3').classList.add('greyed-out');";
         }
       }
     ?>

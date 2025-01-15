@@ -39,6 +39,22 @@ if (isset($_POST['submit'])) {
         exit();
     }
 
+    $sql = "SELECT habit_type_id FROM user_habits WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            if ($row['habit_type_id'] == $habit_type_id) {
+                // Redirect back to the member dashboard if habit already exists
+                header("Location: member-dashboard.php?error=Habit already exists.");
+                exit();
+            }
+        }
+    }
+
     // Insert new habit into user_habits table
     $sql_insert = "INSERT INTO user_habits (user_id, habit_type_id, time_frame, goal, progress, last_updated) 
                    VALUES (?, ?, ?, ?, 0, NOW())"; // Initial progress is set to 0

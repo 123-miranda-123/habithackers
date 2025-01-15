@@ -8,26 +8,6 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Query to get all habits for the user
-$sql = "SELECT * FROM user_habits WHERE user_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $_SESSION['user_id']);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Array to store all habits
-$habits = [];
-
-while ($row = $result->fetch_assoc()) {
-    $habits[] = $row; // Add each habit to the array
-}
-
-// Process each habit
-foreach ($habits as $habit) {
-    $habit_type_id = $habit['habit_type_id'];
-    $habit_id = $habit['id']; // Assuming 'id' is the habit's unique identifier
-}
-
 $sql = "SELECT * FROM team_members WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $_SESSION['user_id']);
