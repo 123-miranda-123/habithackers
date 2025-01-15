@@ -2,7 +2,7 @@
 session_start();
 require_once "database.php";
 
-if (strtolower($_SESSION["user_role"]) !== "admin") {
+if (($_SESSION["user_role"]) !== "Admin") {
     header("Location: index.php");
 }
 // Ensure user is logged in
@@ -33,6 +33,12 @@ if ($conn->connect_error) {
     <script>
       function openEdit(id) {
         window.location.href = 'edit-user.php?id=' + encodeURIComponent(id);
+      }
+      function openCapEdit(id) {
+        window.location.href = 'edit-captain.php?id=' + encodeURIComponent(id);
+      }
+      function openCapDelete(id) {
+        window.location.href = 'delete-captain.php?id=' + encodeURIComponent(id);
       }
       function openDelete(id) {
         window.location.href = 'delete-user.php?id=' + encodeURIComponent(id);
@@ -74,7 +80,7 @@ if ($conn->connect_error) {
             $sql = "SELECT * FROM users";
             $result = $conn->query($sql);
 
-            if (! $result) {
+            if (!$result) {
                 echo "Invalid query: " . $connection->error;
                 exit();
             }
@@ -108,6 +114,35 @@ if ($conn->connect_error) {
                 <th>Role</th>
                 <th>Actions</th>
             </tr>
+            <?php 
+            $sql = "SELECT * from teams";
+            $result = $conn->query($sql);
+            if (!$result) {
+                echo "Invalid query: ". $connection->error;
+                exit();
+            }
+            while ($row = $result->fetch_assoc()) {
+                $sql = "SELECT * from users where id = ". $row["Captain-id"];
+                $res = $conn->query($sql);
+                if (!$res) {
+                    echo "Invalid query: ". $connection->error;
+                    exit();
+                }
+                $inf = $res->fetch_assoc();
+
+                echo "<tr> 
+                <td id = 'team-id'>". $row["id"] . "</td>
+                 <td>".$row["name"] . "</td>
+                 <td>".$inf["name"]."</td>
+                 <td>Team Captain</td>
+                 <td>
+                  
+                    <button id = 'edit' onclick = openEdit(".$row["id"].")>Edit</button>
+                    <button id = 'delete' onclick = openDelete(".$row["id"].")>Delete</button>
+                  
+                </td>";
+            }
+            ?>
             <tr>
                 <td>1</td>
                 <td>Habit Hackers</td>
