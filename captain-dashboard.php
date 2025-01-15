@@ -42,12 +42,6 @@ if ($result->num_rows > 0) {
         $team_data = $result_team->fetch_assoc();
         $team_name = $team_data['name'];
     }
-<<<<<<< Updated upstream
-} else {
-    // User is not part of any team
-    $team_name = "No team created yet.";
-}
-=======
 
     $user_id = $_SESSION['user_id'];
     $user_name = $_SESSION['user_name'];
@@ -80,7 +74,10 @@ if ($result->num_rows > 0) {
         // User is not part of any team
         $team_name = "No team created yet.";
     }
->>>>>>> Stashed changes
+} else {
+    // User is not part of any team
+    $team_name = "No team created yet.";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -96,14 +93,6 @@ if ($result->num_rows > 0) {
     </style>
 </head>
 <body>
-<<<<<<< Updated upstream
-    <script>
-        function openEdit(id) {
-            window.location.href = 'edit-user.php?id=' + encodeURIComponent(id);
-        }
-    </script>
-=======
->>>>>>> Stashed changes
     <nav class="header">
         <div class="header-container">
             <a href="index.php">
@@ -112,9 +101,8 @@ if ($result->num_rows > 0) {
             <div class="auth-buttons">
                 <a href="leaderboard.php" id="leaderboard">Leaderboard</a>
                 <a href="help.html" id="help">Help</a>
-                <a href="logout.php" id="logout">Logout</a>
-                <!-- Added User Profile Link -->
                 <a href="user-profile.php" id="user-profile" class="user-profile-link">User Profile</a>
+                <a href="logout.php" id="logout">Logout</a>
             </div>
         </div>
     </nav>
@@ -160,17 +148,6 @@ if ($result->num_rows > 0) {
         </table>
 
         <button class="open-btn" onclick="openPopup()">+ Create a New Team Habit</button>
-<<<<<<< Updated upstream
-
-        <?php
-        $sql = "SELECT user_habits.*, habit_types.habit_name, habit_types.unit 
-                FROM user_habits
-                JOIN habit_types ON user_habits.habit_type_id = habit_types.id
-                WHERE user_habits.user_id = ?";
-
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $_SESSION['user_id']);
-=======
         <?php
         $sql = "SELECT team_habits.*, habit_types.habit_name, habit_types.unit 
         FROM team_habits
@@ -180,29 +157,18 @@ if ($result->num_rows > 0) {
         $stmt = $conn->prepare($sql);
         // Bind the team_id parameter from the session to the query
         $stmt->bind_param("i", $team_id);
->>>>>>> Stashed changes
         $stmt->execute();
         $result = $stmt->get_result();
 
         echo "<h2>Your Habit Logs</h2>";
 
         if ($result->num_rows > 0) {
-<<<<<<< Updated upstream
-            echo "<table>";
-            echo "<tr><th>Habit Type</th>
-            <th>Your Progress</th>
-            <th>Time Frame</th>
-            <th>Team Goal</th>
-            <th>Company Goal</th>
-            <th>Actions</th></tr>";
-=======
         echo "<table>";
         echo "<tr><th>Habit Type</th>
         <th>Time Frame</th>
         <th>Team Progress</th>
         <th>Company Progress</th>
         <th>Actions</th></tr>";
->>>>>>> Stashed changes
 
             while ($row = $result->fetch_assoc()) {
                 $habit_name = $row['habit_name'];
@@ -249,50 +215,6 @@ if ($result->num_rows > 0) {
             }
 
             echo "</table>";
-        } else {
-            echo "<p>No habits found for this user. Please add some habits.</p>";
-        }
-<<<<<<< Updated upstream
-        ?>
-=======
-        
-
-        // Fetch company goal
-        $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
-        $company_stmt = $conn->prepare($company_goal_sql);
-        $company_stmt->bind_param("s", $habit_name);
-        $company_stmt->execute();
-        $company_goal_result = $company_stmt->get_result();
-        if ($company_goal_result->num_rows > 0) {
-            $company_goal = $company_goal_result->fetch_assoc()['goal'];
-        } else {
-            $company_goal = null;
-        }
-    
-        $progress_percentage = ($row['progress'] / $row['goal']) * 100;
-        $progress_percentage = min(100, $progress_percentage); // Make sure it doesn't exceed 100%
-
-        echo "<tr>";
-        echo "<td>" . $row['habit_name'] . "</td>";
-        echo "<td>
-                <div class='progress-bar'>
-                    <div class='progress' style='width: " . $progress_percentage . "%;'></div>
-                </div>
-                " . $row['progress'] . " " . $row['unit'] . " / " . $row['goal'] . " " . $row['unit'] . "
-              </td>";
-        echo "<td>" . $row['time_frame'] . "</td>";
-        echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
-        echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
-        echo "<td>
-                <button id = 'set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
-                <button id = 'delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
-              </td>";
-        echo "<input type='hidden' name='habit_type_id' value='" . $row['habit_type_id'] . "'>";
-        echo "</tr>";
-    }
-    
-
-    echo "</table>";
 } else {
     echo "<p>No team habits found. Please create some habits for your team.</p>";
 }
@@ -399,7 +321,6 @@ $result_habit_type = $conn->query($sql_habit_type);
       window.location.href = 'captain-dashboard.php';
       
     }
->>>>>>> Stashed changes
     </section>
 </body>
 </html>
