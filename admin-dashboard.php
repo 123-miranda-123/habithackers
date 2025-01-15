@@ -2,7 +2,7 @@
 session_start();
 require_once "database.php";
 
-if (($_SESSION["user_role"]) !== "Admin") {
+if ((strtolower($_SESSION["user_role"])) !== "admin") {
     header("Location: index.php");
 }
 // Ensure user is logged in
@@ -35,10 +35,10 @@ if ($conn->connect_error) {
         window.location.href = 'edit-user.php?id=' + encodeURIComponent(id);
       }
       function openCapEdit(id) {
-        window.location.href = 'edit-captain.php?id=' + encodeURIComponent(id);
+        window.location.href = 'edit-teams.php?id=' + encodeURIComponent(id);
       }
       function openCapDelete(id) {
-        window.location.href = 'delete-captain.php?id=' + encodeURIComponent(id);
+        window.location.href = 'delete-team.php?id=' + encodeURIComponent(id);
       }
       function openDelete(id) {
         window.location.href = 'delete-user.php?id=' + encodeURIComponent(id);
@@ -81,7 +81,7 @@ if ($conn->connect_error) {
             $result = $conn->query($sql);
 
             if (!$result) {
-                echo "Invalid query: " . $connection->error;
+                echo "Invalid query: " . $conn->error;
                 exit();
             }
 
@@ -122,37 +122,22 @@ if ($conn->connect_error) {
                 exit();
             }
             while ($row = $result->fetch_assoc()) {
-                $sql = "SELECT * from users where id = " + $row["captain-id"];
+                $sql = "SELECT * FROM users WHERE id = " . $row["captain_id"];
                 $res = $conn->query($sql);
-                if (!$res) {
-                    echo "Invalid query: ". $conn->error;
-                    exit();
-                }
                 $inf = $res->fetch_assoc();
-
+                echo $inf;
                 echo "<tr> 
                 <td id = 'team-id'>". $row["id"] . "</td>
                  <td>".$row["name"] . "</td>
                  <td>".$inf["name"]."</td>
                  <td>Team Captain</td>
                  <td>
-                  
-                    <button id = 'edit' onclick = openEdit(".$row["id"].")>Edit</button>
-                    <button id = 'delete' onclick = openDelete(".$row["id"].")>Delete</button>
+                    <button id = 'edit' onclick = openCapEdit(".$row["id"].")>Edit</button>
+                    <button id = 'delete' onclick = openCapDelete(".$row["id"].")>Delete</button>
                   
                 </td>";
             }
             ?>
-            <tr>
-                <td>1</td>
-                <td>Habit Hackers</td>
-                <td>John Doe</td>
-                <td>Team Captain</td>
-                <td>
-                    <button href = "edit-user.php">Edit</button>
-                    <button>Delete</button>
-         </td>
-            </tr>
         </table>
     </section>
 </body>
