@@ -9,10 +9,10 @@ if (!isset($_GET["id"])) {
 
 // Retrieve user data for editing
 $id = $_GET["id"];
-$stmt = $conn->prepare("SELECT name, email, role FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT name, captain_id FROM teams WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
-$stmt->bind_result($name, $email, $role);
+$stmt->bind_result($name, $captain_id);
 
 if (!$stmt->fetch()) {
     header("Location: admin-dashboard.php?message=" . urlencode("User not found."));
@@ -22,20 +22,35 @@ $stmt->close();
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $name = $_POST["name"];
-    $cap_id = $_POST["captain"];
+    if (isset($_POST["submit"])) {
+        $name = $_POST["name"];
+        $cap_id = $_POST["captain"];
+        $c = 'Captain';
+        $m = 'Member';
+        if ($captain_id !== $cap_id) {
+            $sql = "UPDATE users SET role = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("si",$c, $cap_id) ;
+            $stmt->execute();
+            $stmt->bind_param("si", $m, $captain_id);
+            $stmt->execute();
+            $stmt->close();
+        }
+        $sql = "UPDATE teams SET name = ?, captain_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("si", $name, $cap_id);
 
-    $sql = "UPDATE teams SET name = ?, captain_id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $name, $cap_id);
-
-    if ($stmt->execute()) {
-        header("Location: admin-dashboard.php?message=" . urlencode("User updated successfully!"));
-        exit();
+        if ($stmt->execute()) {
+            header("Location: admin-dashboard.php?message=" . urlencode("User updated successfully!"));
+            exit();
+        } else {
+            $error = "Error updating user: " . $stmt->error;
+        }
+        $stmt->close();
     } else {
-        $error = "Error updating user: " . $stmt->error;
+        header("Location: admin-dashboard.php");
+        exit();
     }
-    $stmt->close();
 }
 ?>
 <!DOCTYPE html>
@@ -62,6 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="input-group">
             <label for="captain">Team Captain</label>
             <select name="captain" id="captain" required>
+                <option value = "" disabled selected>Select Captain</option>
                 <?php 
                 $sql = "SELECT * FROM users WHERE role = 'Member' OR role = 'Captain'";
                 $stmt = $conn->query($sql);
