@@ -7,6 +7,10 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+if (!isset($_SESSION["typ_id"])) {
+    header("Location: member-dashboard.php");
+    exit();
+}
 
 $sql = "SELECT * FROM user_habits WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
@@ -33,6 +37,12 @@ if (isset($_POST['submit'])) {
     $habit_id = $habit['id']; // Hidden input field from the form
     $goal = intval($_POST['goal']); // New goal frequency
     $time_frame = $_POST['time-interval']; // New time interval
+    if (isset($_GET['type_id']) && is_numeric($_GET['type_id'])) {
+        $habit_type_id = $_GET['type_id'];
+    } else {
+        // Handle error or invalid input
+        die("Invalid habit type.");
+    }
 
     if ($goal <= 0) {
         echo "Invalid goal value.";

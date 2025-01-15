@@ -47,7 +47,13 @@ if ($result->num_rows > 0) {
 if (isset($_POST['submit'])) {
     $user_id = $_SESSION['user_id'];
     $progress = $_POST['progress'];
-
+    if (isset($_GET['type_id']) && is_numeric($_GET['type_id'])) {
+        $habit_type_id = $_GET['type_id'];
+    } else {
+        // Handle error or invalid input
+        die("Invalid habit type.");
+    }
+    
     if ($progress <= 0) {
         header("Location: member-dashboard.php?error=Invalid progress value.");
         exit();
@@ -97,7 +103,4 @@ if (isset($_POST['submit'])) {
     } else {
         echo "Error updating progress: " . $conn->error;
     }
-} else {
-    echo "No data submitted.";
 }
-?>
