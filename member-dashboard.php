@@ -4,7 +4,7 @@ require_once "database.php";
 require_once "reset-progress.php";
 
 // Call the reset function when the page loads
-reset_progress();
+// reset_progress();
 
 // Ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
