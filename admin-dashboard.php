@@ -125,12 +125,10 @@ if ($conn->connect_error) {
                 $sql = "SELECT * FROM users WHERE id = " . $row["captain_id"];
                 $res = $conn->query($sql);
                 $inf = $res->fetch_assoc();
-                echo $inf;
                 echo "<tr> 
                 <td id = 'team-id'>". $row["id"] . "</td>
                  <td>".$row["name"] . "</td>
                  <td>".$inf["name"]."</td>
-                 <td>Team Captain</td>
                  <td>
                     <button id = 'edit' onclick = openCapEdit(".$row["id"].")>Edit</button>
                     <button id = 'delete' onclick = openCapDelete(".$row["id"].")>Delete</button>
