@@ -118,14 +118,14 @@ if ($conn->connect_error) {
             $sql = "SELECT * from teams";
             $result = $conn->query($sql);
             if (!$result) {
-                echo "Invalid query: ". $connection->error;
+                echo "Invalid query: ". $conn->error;
                 exit();
             }
             while ($row = $result->fetch_assoc()) {
-                $sql = "SELECT * from users where id = ". $row["Captain-id"];
+                $sql = "SELECT * from users where id = " + $row["captain-id"];
                 $res = $conn->query($sql);
                 if (!$res) {
-                    echo "Invalid query: ". $connection->error;
+                    echo "Invalid query: ". $conn->error;
                     exit();
                 }
                 $inf = $res->fetch_assoc();
