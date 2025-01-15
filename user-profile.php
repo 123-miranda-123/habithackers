@@ -84,23 +84,43 @@ function validatePassword($password) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link href="styles/header.css" rel="stylesheet" type="text/css"/>
     <link href="styles/login.css" rel="stylesheet" type="text/css"/>
     <style>
-        .home-button {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            width: 100px;
+            height: 50px;
             background-color: #4CAF50;
             color: white;
-            padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
         }
 
-        .home-button:hover {
+        .button-container button:hover {
             background-color: #45a049;
+        }
+
+        .delete-button {
+            width: 200px;
+            height: 50px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .delete-button:hover {
+            background-color: darkred;
         }
     </style>
 </head>
@@ -135,19 +155,19 @@ function validatePassword($password) {
                 <label for="repeat_password">Repeat New Password</label>
                 <input type="password" id="repeat_password" name="repeat_password" required>
             </div>
-            <button type="submit" name="update_password">Update Password</button>
+            <div class="button-container">
+                <button type="submit" name="update_password">Update Password</button>
+                <a href="index.php">
+                    <button type="button" class="home-button">Cancel</button>
+                </a>
+            </div>
         </form>
 
         <!-- Delete Account Form -->
         <form action="user-profile.php" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
-            <h3>Delete Account</h3>
-            <button type="submit" name="delete_account" style="background-color: red; color: white;">Delete Account</button>
+            <br>
+            <button type="submit" name="delete_account" class="delete-button">Delete Account</button>
         </form>
     </section>
-
-    <!-- Home Button -->
-    <a href="login.php">
-        <button class="home-button">Home</button>
-    </a>
 </body>
 </html>
