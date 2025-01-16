@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div class="submit-btn">
             <button id="submit" type="submit" name="submit">Submit</button>
-            <button href="admin-dashboard.php" id ="cancel">Cancel</button>
+            <button onclick = "window.history.back()" id ="cancel">Cancel</button>
         </div>
     </form>
 </section>

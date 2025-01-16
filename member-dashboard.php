@@ -76,14 +76,13 @@ if ($result->num_rows > 0) {
         </div>
 </nav>
 <section class="container">
-    <div id = "title">
         <h2>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h2>
-        <h1>Member Dashboard</p>
-    </div>
-    <div id = "intro">
-        <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
-        <p>Team ID: <?php echo htmlspecialchars($team_id); ?></p>
-    </div>
+        <h1>Member Dashboard</h1>
+
+    
+            <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
+            <p>Team ID: <?php echo htmlspecialchars($team_id); ?></p>
+            
     <button class="open-btn" onclick="openPopup()">+ Create a New Habit</button>
 
     <?php

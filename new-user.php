@@ -61,8 +61,8 @@ require_once "database.php";
         </div>
 
         <div class = "submit-btn">
-            <button type="submit" name = "submit">Create User</button>
-            <button id = "cancel" type="button" name = "cancel" a href = "window.history.back()">Cancel</button>
+            <button type="submit" id = "submit" name = "submit">Create User</button>
+            <button id = "cancel" type="button" name = "cancel" onclick = "window.history.back()">Cancel</button>
         </div>
         
     </form>

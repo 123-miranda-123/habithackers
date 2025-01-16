@@ -14,6 +14,9 @@ if (!isset($_SESSION['user_id'])) {
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+$user_id = $_SESSION['user_id'];
+$user_name = $_SESSION['user_name'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,6 +64,7 @@ if ($conn->connect_error) {
     
 
     <section class = "container">
+        <h2>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h>
         <h1>Admin Dashboard</h1>
         <h2>Users</h2>
         <button class = "add"><a href = "new-user.php">+ New User</a></button>
@@ -136,6 +140,43 @@ if ($conn->connect_error) {
             ?>
         </table>
     </section>
+
+
+    <script>
+    <?php
+      if (isset($_GET["type_id"]) && isset($_GET["action"])) {
+        if ($_GET["action"] == "set-goal") {
+          echo 
+          "document.getElementById('overlay2').style.display = 'flex';
+          document.getElementById('main-content').classList.add('greyed-out');";
+        } else if ($_GET["action"] == "enter-progress") {
+          echo 
+          "document.getElementById('overlay3').style.display = 'flex';
+        document.getElementById('main-content').classList.add('greyed-out');";
+        }
+      }
+    ?>
+    function openPopup() {
+      document.getElementById('overlay').style.display = 'flex';
+      document.getElementById('main-content').classList.add('greyed-out');
+    }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('main-content').classList.remove('greyed-out');
+    }
+
+    function openPopup2(habit_type_id) {
+      window.location.href = 'admin-dashboard.php?type_id=' + habit_type_id + "&action=set-goal";
+      
+    }
+
+    function closePopup2() {
+      document.getElementById('overlay2').style.display = 'none';
+      document.getElementById('main-content').classList.remove('greyed-out');
+      window.location.href = 'admin-dashboard.php';
+      
+    }
 </body>
 </html>
 

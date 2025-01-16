@@ -38,7 +38,7 @@ $user_id = $_SESSION['user_id'];
 
         <div class = "submit-btn">
             <button type="submit" id = "submit" name = "submit">Rename Team</button>
-            <button type="cancel" id = "cancel" name = "cancel"><a href = "captain-dashboard.php">Cancel</a></button>
+            <button type="cancel" id = "cancel" name = "cancel" onclick = "window.history.back()">Cancel</button>
         </div>
     </form>
 </section>

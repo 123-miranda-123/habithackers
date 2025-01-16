@@ -157,9 +157,7 @@ function validatePassword($password) {
             </div>
             <div class="button-container">
                 <button type="submit" name="update_password">Update Password</button>
-                <a href="login.php">
-                    <button type="button" class="home-button">Cancel</button>
-                </a>
+                    <button type="button" class="home-button" onclick = "window.history.back()">Cancel</button>
             </div>
         </form>
 

@@ -39,26 +39,38 @@ html {
 }
   
 #title {
-    font-family: "Poppins", serif;
-    font-weight: 700;
-    font-style: normal;
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 2rem;
-    border-bottom: 2px solid #333;
-    padding-bottom: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
+#left-title {
+  align-items: left;
+}
+
+#rename-team {
+  right: 0;
+}
 .container {
     margin: 200px 250px;
 }
 
+h1, h2 {
+  font-family: "Poppins", serif;
+  font-weight: 700;
+  font-style: normal;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+h1 {
+  font-size: 2rem;
+  border-bottom: 2px solid #333;
+  padding-bottom: 5px;
+}
+
 h2 {
-    font-family: "Poppins", serif;
-    font-weight: 600;
-    font-style: normal;
-    margin-top: 10px;
-    margin-bottom: 10px;
+  font-size: 1.5rem;
 }
 .overlay {
     position: fixed;
@@ -130,7 +142,7 @@ h2 {
     cursor: pointer;
   }
 
-  .open-btn {
+  .open-btn, #rename-team {
     background-color: #007bff;
     color: white;
   }
