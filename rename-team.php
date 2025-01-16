@@ -1,4 +1,4 @@
-<a?php
+<?php
 session_start();
 require_once "database.php";
 
@@ -20,7 +20,7 @@ $user_id = $_SESSION['user_id'];
 </head>
 <body>
 <section class = "container">
-    <form action="create-team.php" method="POST">
+    <form action="rename-team.php" method="POST">
         <h2>Rename Team</h2>
 
         <div id = "message">
@@ -53,7 +53,7 @@ if (isset($_POST["submit"])) {
     $team_name = $_POST['team_name'];
 
         // Insert the new team into the database
-        $sql = "UPDATE teams SET team_name = ? where captain_id = ?";
+        $sql = "UPDATE teams SET name = ? where captain_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("si", $team_name, $captain_id);
 
