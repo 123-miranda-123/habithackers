@@ -48,7 +48,7 @@ if ($conn->connect_error) {
 
     <nav class="header">
         <div class="header-container">
-            <a href="index.ph p">
+            <a href="index.php">
                 <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
             </a>
             <div class="auth-buttons">
