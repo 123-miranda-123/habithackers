@@ -159,7 +159,7 @@ if ($result->num_rows > 0) {
         echo "<td>
                 <button id = 'set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
                 <button id = 'enter-progress' class='open-btn' onclick='openPopup3(".$row['habit_type_id'].")'>Enter Progress</button>
-                <button id = 'delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
+                <button id = 'delete'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
               </td>";
         echo "<input type='hidden' name='habit_type_id' value='" . $row['habit_type_id'] . "'>";
         echo "</tr>";

@@ -162,16 +162,19 @@ h2 {
     color: white;
   }
 
-  #set-goal {
+  #set-goal, #edit{
     background-color: #57a4fe;
+    color: white;
   }
 
-  #enter-progress {
+  #enter-progress, .add{
     background-color: #1bc01b;
+    color: white;
   }
 
-  #delete-goal {
+  #delete {
     background-color: rgb(238, 22, 22);
+    color: white;
   }
 
   .greyed-out {
