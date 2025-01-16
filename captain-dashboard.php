@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->error);
 }
 
 $user_id = $_SESSION['user_id'];
@@ -274,7 +274,7 @@ $result_habit_type = $conn->query($sql_habit_type);
     </div>
     </div>
 
-    <div id="overlay2" class="overlay"> "
+    <div id="overlay2" class="overlay">
         <div class="popup">
             <form action=<?php echo "set-teamgoal.php?type_id=".urlencode($_GET["type_id"]); ?> method="POST">
                 <h2>Update Goal</h2>
