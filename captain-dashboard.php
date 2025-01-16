@@ -107,16 +107,27 @@ if ($result->num_rows > 0) {
         </div>
     </nav>
 
+    <script>
+    function openDelete(id) {
+        window.location.href = 'remove-teammember.php?id=' + encodeURIComponent(id);
+      }
+    </script>
+
     <section class="container">
         <h2>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h2>
         <h1>Captain Dashboard</h1>
 
         <div id="title">
+            <div id = "left-title">
             <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
             <p>Team ID: <?php echo htmlspecialchars($team_id); ?></p>
+            </div>
+            <button id = "rename-team"><a href = "rename-team.php">➤ Rename Team</a></button>
+            
         </div>
 
-        <h2>Team Members</h2>
+
+        <h2>Your Team Members</h2>
         <table class="users-table">
             <tr>
                 <th>User ID</th>
@@ -124,9 +135,8 @@ if ($result->num_rows > 0) {
                 <th>Email</th>
                 <th>Actions</th>
             </tr>
-        
         <?php
-            $sql = "SELECT * FROM team_members";
+            $sql = "SELECT * FROM team_members JOIN users ON team_members.user_id = users.id";
             $result = $conn->query($sql);
             if (!$result) {
                 echo "Invalid query: " . $connection->error;
@@ -135,11 +145,10 @@ if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo "
                 <tr> 
-                <td id='user-id'>" . $row["id"] . "</td>
+                <td id='user-id'>" . $row["user_id"] . "</td>
                 <td>" . $row["name"] . "</td>
                 <td>" . $row["email"] . "</td>
                 <td>
-                    <button id='edit' onclick='openEdit(".$row["id"].")'>Edit</button>
                     <button id='delete' onclick='openDelete(".$row["id"].")'>Remove</button>
                 </td>
             </tr>";
@@ -148,6 +157,7 @@ if ($result->num_rows > 0) {
         </table>
 
         <button class="open-btn" onclick="openPopup()">+ Create a New Team Habit</button>
+
         <?php
         $sql = "SELECT team_habits.*, habit_types.habit_name, habit_types.unit 
         FROM team_habits
@@ -301,6 +311,7 @@ $result_habit_type = $conn->query($sql_habit_type);
         } 
       }
     ?>
+    
     function openPopup() {
       document.getElementById('overlay').style.display = 'flex';
       document.getElementById('main-content').classList.add('greyed-out');

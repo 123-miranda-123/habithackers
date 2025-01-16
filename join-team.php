@@ -51,7 +51,7 @@ if ($result->num_rows > 0) {
         </div>
 
         <div class="submit-btn">
-            <button type="submit" name="submit">Join Team</button>
+            <button id = "submit" type="submit" name="submit">Join Team</button>
         </div>
     </form>
 </section>

@@ -43,6 +43,8 @@ if ($result->num_rows > 0) {
 } else {
     // User is not part of any team
     $team_name = "No team assigned yet.";
+    header("Location: join-team.php");
+    exit();
 }
 ?>
 
@@ -78,7 +80,10 @@ if ($result->num_rows > 0) {
         <h2>Welcome, <?php echo htmlspecialchars($user_name); ?>!</h2>
         <h1>Member Dashboard</p>
     </div>
+    <div id = "intro">
         <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
+        <p>Team ID: <?php echo htmlspecialchars($team_id); ?></p>
+    </div>
     <button class="open-btn" onclick="openPopup()">+ Create a New Habit</button>
 
     <?php
@@ -297,11 +302,11 @@ while ($row = $result->fetch_assoc()) {
         if ($_GET["action"] == "set-goal") {
           echo 
           "document.getElementById('overlay2').style.display = 'flex';
-          document.getElementById('main-content2').classList.add('greyed-out');";
+          document.getElementById('main-content').classList.add('greyed-out');";
         } else if ($_GET["action"] == "enter-progress") {
           echo 
           "document.getElementById('overlay3').style.display = 'flex';
-        document.getElementById('main-content3').classList.add('greyed-out');";
+        document.getElementById('main-content').classList.add('greyed-out');";
         }
       }
     ?>
@@ -322,7 +327,7 @@ while ($row = $result->fetch_assoc()) {
 
     function closePopup2() {
       document.getElementById('overlay2').style.display = 'none';
-      document.getElementById('main-content2').classList.remove('greyed-out');
+      document.getElementById('main-content').classList.remove('greyed-out');
       window.location.href = 'member-dashboard.php';
       
     }
@@ -334,7 +339,7 @@ while ($row = $result->fetch_assoc()) {
 
     function closePopup3() {
       document.getElementById('overlay3').style.display = 'none';
-      document.getElementById('main-content3').classList.remove('greyed-out');
+      document.getElementById('main-content').classList.remove('greyed-out');
       window.location.href = 'member-dashboard.php';
     }
   </script>

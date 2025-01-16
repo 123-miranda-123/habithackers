@@ -130,9 +130,14 @@ body {
     border: 1px solid #57a4fe;
     background-color: white;
     color: #57a4fe;
-    text-decoration: none;
     cursor: pointer;
+    text-decoration: none;
   }
+#cancel a {
+    text-decoration: none;
+    background-color: white;
+    color: #57a4fe;
+}
 
 .signlink p {
     margin-top: 15px;

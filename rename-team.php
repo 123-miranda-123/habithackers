@@ -1,4 +1,4 @@
-<?php
+<a?php
 session_start();
 require_once "database.php";
 
@@ -32,12 +32,13 @@ $user_id = $_SESSION['user_id'];
         </div>
 
         <div class = "input-group">
-            <label for="team_name" >Team Name:</label>
+            <label for="team_name" >New Team Name:</label>
             <input type="text" id="team_name" name="team_name" required>
         </div>
 
         <div class = "submit-btn">
-            <button type="submit" name = "submit">Rename Team</button>
+            <button type="submit" id = "submit" name = "submit">Rename Team</button>
+            <button type="cancel" id = "cancel" name = "cancel"><a href = "captain-dashboard.php">Cancel</a></button>
         </div>
     </form>
 </section>
@@ -60,7 +61,7 @@ if (isset($_POST["submit"])) {
             header("Location: captain-dashboard.php?message=" . urlencode("Team renamed successfully!"));
             exit(); // Make sure no further code is executed after the redirect
         } else {
-            header("Location: create-team.php?message=" . urlencode("Error renaming team: " . $stmt->error));
+            header("Location: captain-dashboard.php?message=" . urlencode("Error renaming team: " . $stmt->error));
             exit(); // Make sure no further code is executed after the redirect
         }
     
