@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 if ($conn->connect_error) {
-    die("Connection failed: " . $connection->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 $user_id = $_SESSION['user_id'];
@@ -311,7 +311,7 @@ $result_habit_type = $conn->query($sql_habit_type);
         } 
       }
     ?>
-    
+
     function openPopup() {
       document.getElementById('overlay').style.display = 'flex';
       document.getElementById('main-content').classList.add('greyed-out');
