@@ -119,7 +119,7 @@ if ($result->num_rows > 0) {
         $team_goal_sql = "SELECT goal FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
         WHERE habit_name = ? AND team_id = ?";
         $team_stmt = $conn->prepare($team_goal_sql);
-        $team_stmt->bind_param("si", $habit_name, $_SESSION['team_id']); // assuming team_id is stored in session
+        $team_stmt->bind_param("si", $habit_name, $team_id); 
         $team_stmt->execute();
         $team_goal_result = $team_stmt->get_result();
         if ($team_goal_result->num_rows > 0) {
@@ -141,21 +141,52 @@ if ($result->num_rows > 0) {
             $company_goal = null;
         }
     
-        $progress_percentage = ($row['progress'] / $row['goal']) * 100;
-        $progress_percentage = min(100, $progress_percentage); // Make sure it doesn't exceed 100%
+        $progress_percentage_user = ($row['progress'] / $row['goal']) * 100;
+        $progress_percentage_user = min(100, $progress_percentage_user); // Make sure it doesn't exceed 100%
+
+        if ($team_goal != 0) {
+        $progress_percentage_team = ($row['progress'] / $team_goal) * 100;
+        $progress_percentage_team = min(100, $progress_percentage_team); // Make sure it doesn't exceed 100%
+        }
+
+        if ($company_goal != 0) {
+        $progress_percentage_company = ($row['progress'] / $team_goal) * 100;
+        $progress_percentage_company = min(100, $progress_percentage_company); // Make sure it doesn't exceed 100%
+        }
 
 
         echo "<tr>";
         echo "<td>" . $row['habit_name'] . "</td>";
         echo "<td>
                 <div class='progress-bar'>
-                    <div class='progress' style='width: " . $progress_percentage . "%;'></div>
+                    <div class='progress' style='width: " . $progress_percentage_user . "%;'></div>
                 </div>
                 " . $row['progress'] . " " . $row['unit'] . " / " . $row['goal'] . " " . $row['unit'] . "
               </td>";
         echo "<td>" . $row['time_frame'] . "</td>";
+
+        if ($team_goal != null) {
+            echo "<td>
+                    <div class='progress-bar'>
+                        <div class='progress' style='width: " . $progress_percentage_team . "%;'></div>
+                    </div>
+                    " . $row['progress'] . " " . $row['unit'] . " / " . $team_goal . " " . $row['unit'] . "
+                </td>";
+        } else {
         echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
-        echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
+        }
+
+        if ($company_goal != null) {
+            echo "<td>
+                    <div class='progress-bar'>
+                        <div class='progress' style='width: " . $progress_percentage_company . "%;'></div>
+                    </div>
+                    " . $row['progress'] . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . "
+                </td>";
+        } else {
+            echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
+        }
+        
         echo "<td>
                 <button id = 'set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
                 <button id = 'enter-progress' class='open-btn' onclick='openPopup3(".$row['habit_type_id'].")'>Enter Progress</button>

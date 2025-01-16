@@ -86,6 +86,11 @@ function validatePassword($password) {
     <title>User Profile</title>
     <link href="styles/login.css" rel="stylesheet" type="text/css"/>
     <style>
+
+        button {
+            font-family: 'Lexend';
+        }
+
         .button-container {
             display: flex;
             justify-content: center;
@@ -96,18 +101,27 @@ function validatePassword($password) {
         .button-container button {
             width: 100px;
             height: 50px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
         }
 
-        .button-container button:hover {
-            background-color: #45a049;
+        .submit:hover {
+            background-color:rgb(81, 153, 235);
         }
 
+        .submit {
+            background-color: #57a4fe;
+            color: white;
+            border: none;
+        }
+
+        .cancel {
+            background-color: white;
+            border: solid 1px #57a4fe;
+            color:#57a4fe;
+        }
+        
         .delete-button {
             width: 200px;
             height: 50px;
@@ -125,7 +139,7 @@ function validatePassword($password) {
     </style>
 </head>
 <body>
-    <section class="container">
+    <b class="container">
         <h2>User Profile</h2>
         <?php
         if (isset($error_message)) {
@@ -136,10 +150,10 @@ function validatePassword($password) {
         }
         ?>
         <div class="profile-section">
-            <h3>Welcome, <?= htmlspecialchars($user["name"]) ?>!</h3>
-            <p>Email: <?= htmlspecialchars($user["email"]) ?></p>
+            <p>Hello, <?= htmlspecialchars($user["name"]) ?>!</p>
+            <p><?= htmlspecialchars($user["email"]) ?></p>
         </div>
-
+        <br></br>
         <!-- Update Password Form -->
         <form action="user-profile.php" method="POST">
             <h3>Update Password</h3>
@@ -156,8 +170,8 @@ function validatePassword($password) {
                 <input type="password" id="repeat_password" name="repeat_password" required>
             </div>
             <div class="button-container">
-                <button type="submit" name="update_password">Update Password</button>
-                    <button type="button" class="home-button" onclick = "window.history.back()">Cancel</button>
+                <button type="submit" class = "submit" name="update_password">Update Password</button>
+                <button typ="button" class= "cancel" onclick = "window.history.back()">Cancel</button>
             </div>
         </form>
 
