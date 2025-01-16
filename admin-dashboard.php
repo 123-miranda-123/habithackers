@@ -58,7 +58,6 @@ if ($conn->connect_error) {
             </div>
         </div>
     </nav>
-    <div id="overlay" class="overlay">
     
 
     <section class = "container">
