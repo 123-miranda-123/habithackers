@@ -54,8 +54,8 @@ require_once "database.php";
         </div>
 
         <div class = "submit-btn">
-            <button type="submit" name = "submit">Create Team</button>
-            <button id = "cancel" type="button" name = "cancel" a href = "window.history.back()">Cancel</button>
+            <button id = "submit" type="submit" name = "submit">Create Team</button>
+            <button id = "cancel" type="button" name = "cancel" onclick = "window.history.back()">Cancel</button>
         </div>
         
     </form>

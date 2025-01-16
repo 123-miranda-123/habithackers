@@ -182,23 +182,14 @@ if ($result->num_rows > 0) {
         if ($result->num_rows > 0) {
         echo "<table>";
         echo "<tr><th>Habit Type</th>
-        <th>Time Frame</th>
         <th>Team Progress</th>
+        <th>Time Frame</th>
         <th>Company Progress</th>
         <th>Actions</th></tr>";
 
             while ($row = $result->fetch_assoc()) {
                 $habit_name = $row['habit_name'];
                 $unit = $row['unit'];
-
-                // Fetch team goal
-                $team_goal_sql = "SELECT goal FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
-                WHERE habit_name = ? AND team_id = ?";
-                $team_stmt = $conn->prepare($team_goal_sql);
-                $team_stmt->bind_param("si", $habit_name, $_SESSION['team_id']);
-                $team_stmt->execute();
-                $team_goal_result = $team_stmt->get_result();
-                $team_goal = ($team_goal_result->num_rows > 0) ? $team_goal_result->fetch_assoc()['goal'] : null;
 
                 // Fetch company goal
                 $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
@@ -220,11 +211,9 @@ if ($result->num_rows > 0) {
                         " . $row['progress'] . " " . $row['unit'] . " / " . $row['goal'] . " " . $row['unit'] . "
                       </td>";
                 echo "<td>" . $row['time_frame'] . "</td>";
-                echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
                 echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
                 echo "<td>
                         <button id='set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
-                        <button id='enter-progress' class='open-btn' onclick='openPopup3(".$row['habit_type_id'].")'>Enter Progress</button>
                         <button id='delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>
                       </td>";
                 echo "<input type='hidden' name='habit_type_id' value='" . $row['habit_type_id'] . "'>";

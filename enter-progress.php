@@ -14,9 +14,6 @@ $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$team_id = null; // Default to null for no team
-$team_name = "No team assigned yet.";
-
 if ($result->num_rows > 0) {
     // User is part of a team, fetch team details
     $team_row = $result->fetch_assoc();
@@ -27,6 +24,7 @@ if ($result->num_rows > 0) {
 if (isset($_POST['submit'])) {
     $user_id = $_SESSION['user_id'];
     $progress = $_POST['progress'];
+
     if (isset($_GET['type_id']) && is_numeric($_GET['type_id'])) {
         $habit_type_id = $_GET['type_id'];
     } else {
@@ -62,9 +60,19 @@ if (isset($_POST['submit'])) {
             $stmt_insert_team = $conn->prepare($sql_insert_team);
             $stmt_insert_team->bind_param("iii", $team_id, $habit_type_id, $progress);
             if (!$stmt_insert_team->execute()) {
-                echo "Error inserting team habit progress.";
+                header("Location: member-dashboard.php?error=" . urlencode("Error inserting team habit progress."));
                 exit();
             }
+
+            $sql_update = "UPDATE team_habits SET progress = progress + ?, last_updated = NOW() WHERE team_id = ? AND habit_type_id = ?";
+            $stmt_update = $conn->prepare($sql_update);
+            $stmt_update->bind_param("iii", $progress, $team_id, $habit_type_id);
+
+            if (!$stmt_update->execute()) {
+                header("Location: member-dashboard.php?error=" . urlencode("Error updating team habit progress."));
+                exit();
+            }
+
         }
 
         // Insert into company_habit_progress
@@ -76,6 +84,10 @@ if (isset($_POST['submit'])) {
             echo "Error inserting company habit progress.";
             exit();
         }
+
+        $sql_updatecompany = "UPDATE company_habits SET progress = progress + ?, last_updated = NOW() WHERE habit_type_id = ?";
+        $stmt_updatecompany = $conn->prepare($sql_updatecompany);
+        $stmt_updatecompany->bind_param("ii", $progress, $habit_type_id);
 
         // Redirect to the member dashboard after successful progress update
         header("Location: member-dashboard.php");

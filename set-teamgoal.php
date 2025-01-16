@@ -41,12 +41,16 @@ if ($result->num_rows > 0) {
     $team_name = "No team created yet.";
 }
 
+
+$user_id = $_SESSION['user_id'];
+
 // Handle form submission
 if (isset($_POST['submit'])) {
     // Sanitize and fetch form values
-    $user_id = $_SESSION['user_id'];
     $goal = $_POST['goal']; // New goal frequency
     $time_frame = $_POST['time-interval']; // New time interval
+
+    header("Location: captain-dashboard.php?received=" . urlencode($goal));
 
     if (isset($_GET['type_id']) && is_numeric($_GET['type_id'])) {
         $habit_type_id = $_GET['type_id'];
@@ -61,7 +65,7 @@ if (isset($_POST['submit'])) {
     }
 
     // Update the goal in the `user_habits` table
-    $sql = "UPDATE team_habits SET goal = ?, time_frame = ?, last_updated = NOW() WHERE user_id = ? AND habit_type_id = ?";
+    $sql = "UPDATE team_habits SET goal = ?, time_frame = ?, last_updated = NOW() WHERE team_id = ? AND habit_type_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("isii", $goal, $time_frame, $team_id, $habit_type_id);
 

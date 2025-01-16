@@ -9,6 +9,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$user_id = $_SESSION["user_id"];
+$user_name = $_SESSION["user_name"];
+
 $sql = "SELECT id FROM teams WHERE captain_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
@@ -19,34 +22,18 @@ if ($result->num_rows > 0) {
     // User is captain of a team, fetch team details
     $team_row = $result->fetch_assoc();
     $team_id = $team_row['id'];
-
-    // Fetch the team name
-    $sql_team = "SELECT name FROM teams WHERE id = ?";
-    $stmt_team = $conn->prepare($sql_team);
-    $stmt_team->bind_param("i", $team_id);
-    $stmt_team->execute();
-    $result_team = $stmt_team->get_result();
-    $team_name = '';
-
-    if ($result_team->num_rows > 0) {
-        $team_data = $result_team->fetch_assoc();
-        $team_name = $team_data['name'];
-    }
-} else {
-    // User is not part of any team
-    $team_name = "No team created yet.";
 }
 
 // Handle form submission
 if (isset($_POST['submit'])) {
     // Sanitize and fetch form values
-    $user_id = $_SESSION['user_id'];
     $habit_type = $_POST['habit-type'];
     $goal = $_POST['goal'];
     $time_frame = $_POST['time-interval'];
 
+
     if ($goal <= 0) {
-        header("Location: member-dashboard.php?error=Invalid goal value.");
+        header("Location: captain-dashboard.php?error=Invalid goal value.");
         exit();
     }
     
@@ -76,8 +63,8 @@ if (isset($_POST['submit'])) {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             if ($row['habit_type_id'] == $habit_type_id) {
-                // Redirect back to the member dashboard if habit already exists
-                header("Location: member-dashboard.php?error=Habit already exists.");
+                // Redirect back to the captain dashboard if habit already exists
+                header("Location: captain-dashboard.php?error=Habit already exists.");
                 exit();
             }
         }
@@ -90,7 +77,7 @@ if (isset($_POST['submit'])) {
     $stmt_insert->bind_param("iiss", $team_id, $habit_type_id, $time_frame, $goal);
     
     if ($stmt_insert->execute()) {
-        // Redirect to the member dashboard after successful habit creation
+        // Redirect to the captain dashboard after successful habit creation
         header("Location: captain-dashboard.php");
         exit();
     } else {

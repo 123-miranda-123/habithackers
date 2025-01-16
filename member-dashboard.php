@@ -409,50 +409,6 @@ window.onload = function () {
 </script>
 </script>
 
-<?php
-// Fetch leaderboard data
-$habitTypeId = 1; // Replace with the habit type ID you want to rank users on (e.g., Exercise)
-$sql = "
-    SELECT u.id AS user_id, u.name AS user_name,
-    SUM(uhp.progress) AS total_progress
-    FROM users u
-    INNER JOIN user_habit_progress uhp ON u.id = uhp.user_id
-    WHERE uhp.habit_type_id = ?
-    GROUP BY u.id
-    ORDER BY total_progress DESC
-";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $habitTypeId);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Display leaderboard
-echo "<h1>User Leaderboard for Habit ID: $habitTypeId</h1>";
-echo "<table border='1'>
-        <tr>
-            <th>Rank</th>
-            <th>User Name</th>
-            <th>Total Progress</th>
-        </tr>";
-
-$rank = 1;
-while ($row = $result->fetch_assoc()) {
-    echo "<tr>
-            <td>{$rank}</td>
-            <td>{$row['user_name']}</td>
-            <td>{$row['total_progress']}</td>
-          </tr>";
-    $rank++;
-}
-
-echo "</table>";
-
-// Close connection
-$stmt->close();
-$conn->close();
-?>
-
 </body>
 </html>
 </section>
