@@ -214,7 +214,7 @@ $result_habit_type = $conn->query($sql_habit_type);
     </div>
     </div>
 
-    <div id="overlay2" class="overlay"> "
+    <div id="overlay2" class="overlay">
         <div class="popup">
             <form action=<?php echo "set-goal.php?type_id=".urlencode($_GET["type_id"]); ?> method="POST">
                 <h2>Update Goal</h2>
@@ -258,7 +258,7 @@ $result_habit_type = $conn->query($sql_habit_type);
     </form>
     </div>
     </div>
-<p></p>
+
 <h2>Your Progress Visualization</h2>
 
 <div id="charts-container">
@@ -413,10 +413,8 @@ window.onload = function () {
 // Fetch leaderboard data
 $habitTypeId = 1; // Replace with the habit type ID you want to rank users on (e.g., Exercise)
 $sql = "
-    SELECT 
-        u.id AS user_id,
-        u.name AS user_name,
-        SUM(uhp.progress) AS total_progress
+    SELECT u.id AS user_id, u.name AS user_name,
+    SUM(uhp.progress) AS total_progress
     FROM users u
     INNER JOIN user_habit_progress uhp ON u.id = uhp.user_id
     WHERE uhp.habit_type_id = ?

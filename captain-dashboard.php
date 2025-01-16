@@ -1,6 +1,10 @@
 <?php
 session_start();
 require_once("database.php");
+require_once "reset-progress.php";
+
+// Call the reset function when the page loads
+reset_progress();
 
 if (($_SESSION["user_role"]) !== "Captain") {
     header("Location: index.php");
@@ -13,7 +17,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->error);
+    exit("Connection failed: " . $conn->error);
 }
 
 $user_id = $_SESSION['user_id'];
@@ -91,6 +95,7 @@ if ($result->num_rows > 0) {
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <nav class="header">
@@ -122,7 +127,7 @@ if ($result->num_rows > 0) {
             <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
             <p>Team ID: <?php echo htmlspecialchars($team_id); ?></p>
             </div>
-            <button id = "rename-team"><a href = "rename-team.php">➤ Rename Team</a></button>
+            <button id = "rename-team"><a href = "rename-team.php">➢ Rename Team</a></button>
             
         </div>
 
@@ -156,7 +161,10 @@ if ($result->num_rows > 0) {
         ?>
         </table>
 
-        <button class="open-btn" onclick="openPopup()">+ Create a New Team Habit</button>
+
+        <h2>Your Team Habit Logs</h2>
+        <button class= "open-btn" onclick="openPopup()">+ Create a New Team Habit</button>
+        
 
         <?php
         $sql = "SELECT team_habits.*, habit_types.habit_name, habit_types.unit 
@@ -170,7 +178,6 @@ if ($result->num_rows > 0) {
         $stmt->execute();
         $result = $stmt->get_result();
 
-        echo "<h2>Your Habit Logs</h2>";
 
         if ($result->num_rows > 0) {
         echo "<table>";
@@ -332,6 +339,7 @@ $result_habit_type = $conn->query($sql_habit_type);
       window.location.href = 'captain-dashboard.php';
       
     }
+    </script>
     </section>
 </body>
 </html>
