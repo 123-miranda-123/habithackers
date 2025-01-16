@@ -139,7 +139,7 @@ if ($result->num_rows > 0) {
             $sql = "SELECT * FROM team_members JOIN users ON team_members.user_id = users.id";
             $result = $conn->query($sql);
             if (!$result) {
-                echo "Invalid query: " . $connection->error;
+                echo "Invalid query: " . $conn->error;
                 exit();
             }
             while ($row = $result->fetch_assoc()) {
