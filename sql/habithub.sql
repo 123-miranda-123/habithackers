@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `company_habits` (
   `id` int NOT NULL,
   `habit_type_id` int NOT NULL,
-  `time_frame` enum('daily','weekly','monthly') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `time_frame` enum('Daily','Weekly','Monthly') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `goal` int NOT NULL DEFAULT '0',
   `progress` int NOT NULL DEFAULT '0',
   `last_updated` datetime DEFAULT CURRENT_TIMESTAMP
@@ -97,7 +97,7 @@ CREATE TABLE `team_habits` (
   `id` int NOT NULL,
   `team_id` int NOT NULL,
   `habit_type_id` int NOT NULL,
-  `time_frame` enum('daily','weekly','monthly') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `time_frame` enum('Daily','Weekly','Monthly') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `goal` int NOT NULL DEFAULT '0',
   `progress` int NOT NULL DEFAULT '0',
   `last_updated` datetime DEFAULT CURRENT_TIMESTAMP
