@@ -11,7 +11,7 @@ if (!isset($_GET["id"])) {
 $t_id = $_GET["id"];
 $stmt = $conn->prepare("SELECT name, captain_id FROM teams WHERE id = ?");
 $stmt->bind_param("i", $t_id);
-$stmt->execute();
+$res = $stmt->execute();
 $stmt->bind_result($name, $cap_id);
 
 if (!$stmt->fetch()) {
@@ -21,6 +21,11 @@ if (!$stmt->fetch()) {
 $stmt->close();
 
 // Handle form submission
+
+$stmt = $conn->prepare("UPDATE users SET role = 'Member' WHERE id = ?");
+$stmt->bind_param("i", $cap_id);
+$stmt->execute();
+$stmt->close();
 
 $sql = "DELETE FROM teams WHERE id = ?";
 $stmt = $conn->prepare($sql);

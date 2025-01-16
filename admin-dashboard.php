@@ -109,6 +109,7 @@ $user_name = $_SESSION['user_name'];
 
 
         <h2>Teams</h2>
+        <button class = "add"><a href = "new-team.php">+ New Team</a></button>
         <table class = "teams-table">
             <tr>
                 <th>Team ID</th>
