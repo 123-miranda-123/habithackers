@@ -51,9 +51,10 @@ html {
 #rename-team {
   right: 0;
 }
-.container {
-    margin: 200px 250px;
+body {
+  margin: 200px 250px;
 }
+
 
 h1, h2 {
   font-family: "Poppins", serif;
@@ -72,6 +73,7 @@ h1 {
 h2 {
   font-size: 1.5rem;
 }
+
 .overlay {
     position: fixed;
     top: 0;
@@ -236,4 +238,19 @@ p {
     font-family: "Poppins", serif;
     font-weight: 400;
     font-style: normal;
+}
+
+
+#charts-container {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+canvas {
+  width: 100%;  /* Allow canvas to resize based on the container */
+  height: auto; /* Maintain aspect ratio */
+  max-width: 500px;  /* Limit the width of each chart */
 }

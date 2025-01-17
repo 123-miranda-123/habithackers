@@ -164,7 +164,6 @@ if ($result->num_rows > 0) {
 
         <h2>Your Team Habit Logs</h2>
         <button class= "open-btn" onclick="openPopup()">+ Create a New Team Habit</button>
-        
 
         <?php
         $sql = "SELECT team_habits.*, habit_types.habit_name, habit_types.unit 
@@ -296,6 +295,126 @@ $result_habit_type = $conn->query($sql_habit_type);
             </form>
         </div>
     </div>
+    
+    
+    <h2>Your Team Progress Visualization</h2>
+    
+    <div id="charts-container">
+    <?php
+    // Query to aggregate progress by date for each user and habit type
+    $sql = "SELECT team_id, habit_type_id, habit_types.habit_name, habit_types.unit, DATE(timestamp) as date, SUM(progress) as total_progress
+        FROM team_habit_progress
+        INNER JOIN habit_types ON team_habit_progress.habit_type_id = habit_types.id
+        WHERE team_id = ? 
+        GROUP BY team_id, habit_type_id, DATE(timestamp)
+        ORDER BY DATE(timestamp)
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $team_id); // Use the logged-in user's ID
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $data = [];
+    while ($row = $result->fetch_assoc()) {
+        $habit_type_id = $row['habit_type_id'];
+        $date = $row['date'];
+        $total_progress = $row['total_progress'];
+        $habit_name = $row['habit_name'];
+        $unit = $row['unit'];
+
+        // Format the data into a structure where habit_type_id is the key
+        if (!isset($data[$habit_type_id])) {
+            $data[$habit_type_id] = [];
+        }
+
+        $data[$habit_type_id][] = [
+            'date' => $date,
+            'progress' => $total_progress,
+            'habit_name' => $habit_name,
+            'unit' => $unit
+        ];
+    }
+    ?>
+    </div>
+
+    <script>
+        var habitData = <?php echo json_encode($data); ?>;
+
+            const colors = {
+                1: 'rgba(255, 99, 132, 0.6)',   // Red
+                2: 'rgba(54, 162, 235, 0.6)',   // Blue
+                3: 'rgba(75, 192, 192, 0.6)',   // Green
+                4: 'rgba(153, 102, 255, 0.6)',  // Purple
+                5: 'rgba(255, 159, 64, 0.6)',   // Orange
+                6: 'rgba(255, 205, 86, 0.6)',   // Yellow
+                7: 'rgba(156, 39, 176, 0.6)',   // Pink
+                8: 'rgba(0, 123, 255, 0.6)'     // Blue
+            };
+
+        window.onload = function () {
+            // Loop through each habit_type_id and create a chart
+            Object.keys(habitData).forEach((habitTypeId) => {
+                const habitDataArray = habitData[habitTypeId];
+
+                // Extract dates, progress values, unit, and habit name
+                const labels = habitDataArray.map((entry) => entry.date);
+                const progressValues = habitDataArray.map((entry) => entry.progress);
+                const unit = habitDataArray[0].unit;
+                const habitName = habitDataArray[0].habit_name;
+
+                // Create a new canvas for each habit type chart
+                const canvasId = `chart-habit-${habitTypeId}`;
+                const canvas = document.createElement("canvas");
+                canvas.id = canvasId;
+
+                const chartColor = colors[habitTypeId]
+
+                // Append to the charts-container div
+                document.getElementById('charts-container').appendChild(canvas);
+
+                // Chart.js configuration for each habit
+                const ctx = document.getElementById(canvasId).getContext("2d");
+                const chart = new Chart(ctx, {
+                    type: "bar", // Change to "bar" if you prefer a bar chart
+                    data: {
+                        labels: labels, // X-axis (dates)
+                        datasets: [{
+                            label: `Progress for ${habitName} (${unit})` ,  // Customize label with habit name
+                            data: progressValues, // Y-axis (progress values)
+                            backgroundColor: chartColor, // Bar color
+                            borderColor: chartColor.replace('0.6', '1'),  // Border color
+                            tension: 0.1,  // Smoothness of the line
+                            borderWidth: 2  // Line width
+                        }]
+                    },
+                    options: {
+                        responsive: true,  // Make the chart responsive
+                        plugins: {
+                            legend: {
+                                display: true,
+                            },
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date',  // X-axis title
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: `${unit}` // Y-axis title
+                                }
+                            },
+                        },
+                    }
+                });
+            });
+        }
+</script>
 
     <script>
     <?php
