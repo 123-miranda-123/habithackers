@@ -63,15 +63,28 @@ h1 {
     font-family: "Poppins", serif;
     font-weight: 700;
     font-style: normal;
+    border-bottom: 2px solid black;
 }
 
 h2 {
     font-family: "Poppins", serif;
     font-weight: 600;
     font-style: normal;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
+
+h3 {
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-style: normal;
+    text-indent: 30px;
+    margin-bottom: 5px;
+}
+
 p {
     font-family: "Poppins", serif;
     font-weight: 400;
     font-style: normal;
+    margin-bottom: 5px;
 }

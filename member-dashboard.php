@@ -84,7 +84,8 @@ if ($result->num_rows > 0) {
             <p>Team Name: <?php echo htmlspecialchars($team_name); ?></p>
             <p>Team ID: <?php echo htmlspecialchars($team_id); ?></p>
             
-    <button class="open-btn" onclick="openPopup()">+ Create a New Habit</button>
+            
+            <button class="open-btn" onclick="openPopup()">+ Create a New Habit</button>
 
     <?php
 // Fetch user's habits from the user_habits table
