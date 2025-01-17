@@ -15,7 +15,7 @@ $user_id = $_SESSION["user_id"];
 if (isset($_GET['habit_type_id'])) {
     $habit_type_id = $_GET['habit_type_id'];
 
-    if ($user_role = "Member") {
+    if ($user_role == "Member") {
     // Delete the habit progress associated with the user (in the 'user_habits' table)
         $sql_delete_progress = "DELETE FROM user_habits WHERE habit_type_id = ? AND user_id = ?";
         $stmt_delete_progress = $conn->prepare($sql_delete_progress);
@@ -23,7 +23,7 @@ if (isset($_GET['habit_type_id'])) {
         $stmt_delete_progress->execute();
     } 
 
-    else if ($user_role = "Captain") {
+    else if ($user_role == "Captain") {
 
         $sql = "SELECT id FROM teams WHERE captain_id = ?";
         $stmt = $conn->prepare($sql);
@@ -40,7 +40,7 @@ if (isset($_GET['habit_type_id'])) {
         $stmt_delete_progress->execute();
         } 
 
-    else if ($user_role = 'Admin') {
+    else if ($user_role == 'Admin') {
 
         $sql_delete_progress = "DELETE FROM company_habits WHERE habit_type_id = ?";
         $stmt_delete_progress = $conn->prepare($sql_delete_progress);

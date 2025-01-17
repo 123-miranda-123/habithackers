@@ -191,25 +191,25 @@ if ($result->num_rows > 0) {
                 $unit = $row['unit'];
 
                 // Fetch company goal
-                $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
+                $company_goal_sql = "SELECT goal, progress, time_frame FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
                 $company_stmt = $conn->prepare($company_goal_sql);
                 $company_stmt->bind_param("s", $habit_name);
                 $company_stmt->execute();
                 $company_goal_result = $company_stmt->get_result();
+                $company_progress = 0;
                 if ($company_goal_result->num_rows > 0) {
                     $company_goal_row = $company_goal_result->fetch_assoc();
                     $company_goal = $company_goal_row['goal'];
-        
+
                     if ($company_goal_row['progress'] != null) {
                         $company_progress = $company_goal_row['progress'];
                     }
-        
+
                     if ($company_goal_row['time_frame'] != null) {
                         $company_time_frame = $company_goal_row['time_frame'];
                     }
                 } else {
                     $company_goal = null;
-                    $company_progress = null;
                     $company_time_frame = null;
                 }
 

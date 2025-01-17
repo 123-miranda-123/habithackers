@@ -89,7 +89,10 @@ if (isset($_POST['submit'])) {
         $sql_updatecompany = "UPDATE company_habits SET progress = progress + ?, last_updated = NOW() WHERE habit_type_id = ?";
         $stmt_updatecompany = $conn->prepare($sql_updatecompany);
         $stmt_updatecompany->bind_param("ii", $progress, $habit_type_id);
-
+        if (!$stmt_updatecompany->execute()) {
+            header("Location: member-dashboard.php?error=" . urlencode("Error updating company habit progress."));
+            exit();
+        }
         // Redirect to the member dashboard after successful progress update
         header("Location: member-dashboard.php");
         exit();

@@ -25,7 +25,8 @@ $hrs_fac = 60;
     </style>
 </head>
 <body>
-<!-- <nav class="header">
+
+    <nav class="header">
         <div class="header-container">
             <a href="index.php">
                 <img src="images/Banner 2.png" alt="Habit Hub Logo" class="logo">
@@ -37,9 +38,13 @@ $hrs_fac = 60;
                 <a href="logout.php" id="logout">Logout</a>
             </div>
         </div>
-    </nav> -->
-<div>
-        <?php
+    </nav>
+
+<section class = "leaderboard" class = "container">
+
+<img src="images/trophyicon.png" width = 80px alt="Gamification Icon" class="feature-icon">
+<h1>Company Rankings</h1>
+<?php
 
 $users = array();
 
@@ -162,5 +167,6 @@ foreach ($teams as $team => $value) {
 echo "</table>";
     ?>
 </div>
+</section>
 </body>
 </html>
