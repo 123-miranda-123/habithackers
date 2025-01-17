@@ -149,7 +149,7 @@ while ($row = $result->fetch_assoc()) {
 arsort($users);
 echo "<h2>Team Leaderboard</h2>";
 echo "<table>";
-echo "<tr><th>Rank</th><th>Team</th><th>Total Progress</th></tr>";
+echo "<tr><th>Rank</th><th>Team</th><th>Total Points</th></tr>";
 
 $rank = 1;
 foreach ($teams as $team => $value) {
