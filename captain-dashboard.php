@@ -201,7 +201,7 @@ if ($result->num_rows > 0) {
                     $company_goal = $company_goal_row['goal'];
         
                     if ($company_goal_row['progress'] != null) {
-                    $company_progress = $company_goal_row['progress'];
+                        $company_progress = $company_goal_row['progress'];
                     }
         
                     if ($company_goal_row['time_frame'] != null) {
@@ -226,12 +226,12 @@ if ($result->num_rows > 0) {
                       </td>";
                 echo "<td>" . $row['time_frame'] . "</td>";
                 if ($company_goal != null) {
-                echo "<td>
-                        <div class='progress-bar'>
-                            <div class='progress' style='width: " . $progress_percentage_company . "%;'></div>
-                        </div>
-                        " . $company_progress . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . " (" . $company_time_frame . ")" . "
-                    </td>";
+                    echo "<td>
+                            <div class='progress-bar'>
+                                <div class='progress' style='width: " . $progress_percentage . "%;'></div>
+                            </div>
+                            " . $company_progress . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . " (" . $company_time_frame . ")" . "
+                        </td>";
                 } else {
                     echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
                 }
@@ -244,8 +244,6 @@ if ($result->num_rows > 0) {
             }
 
             echo "</table>";
-} else {
-    echo "<p>No team habits found. Please create some habits for your team.</p>";
 }
 ?>
 

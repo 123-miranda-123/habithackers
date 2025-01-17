@@ -41,6 +41,7 @@ if (isset($_GET['habit_type_id'])) {
         } 
 
     else if ($user_role = 'Admin') {
+
         $sql_delete_progress = "DELETE FROM company_habits WHERE habit_type_id = ?";
         $stmt_delete_progress = $conn->prepare($sql_delete_progress);
         $stmt_delete_progress->bind_param("i", $habit_type_id);

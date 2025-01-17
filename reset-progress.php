@@ -123,36 +123,35 @@ function reset_company_habits($current_day, $current_day_of_week, $current_day_o
     $result = $conn->query($sql);
 
     while ($row = $result->fetch_assoc()) {
-        $company_id = $row['company_id'];
         $habit_type_id = $row['habit_type_id'];
         $time_frame = $row['time_frame'];
         $last_updated = $row['last_updated'];
 
-        error_log("Checking company habit for company_id: $company_id, habit_type_id: $habit_type_id, time_frame: $time_frame, last_updated: $last_updated");
+        error_log("Checking company habit for habit_type_id: $habit_type_id, time_frame: $time_frame, last_updated: $last_updated");
 
         if ($time_frame == 'Daily') {
             if ($current_day != date('Y-m-d', strtotime($last_updated))) {
-                $update_sql = "UPDATE company_habits SET progress = 0, last_updated = ? WHERE company_id = ? AND habit_type_id = ?";
+                $update_sql = "UPDATE company_habits SET progress = 0, last_updated = ? WHERE habit_type_id = ?";
                 $stmt = $conn->prepare($update_sql);
-                $stmt->bind_param("sii", $current_datetime, $company_id, $habit_type_id);
+                $stmt->bind_param("si", $current_datetime, $habit_type_id);
                 $stmt->execute();
-                error_log("Daily company habit reset for company_id: $company_id, habit_type_id: $habit_type_id");
+                error_log("Daily company habit reset for company: habit_type_id: $habit_type_id");
             }
         } elseif ($time_frame == 'Weekly') {
             if ($current_day_of_week == 1 && $current_day != date('Y-m-d', strtotime($last_updated))) {
-                $update_sql = "UPDATE company_habits SET progress = 0, last_updated = ? WHERE company_id = ? AND habit_type_id = ?";
+                $update_sql = "UPDATE company_habits SET progress = 0, last_updated = ? WHERE habit_type_id = ?";
                 $stmt = $conn->prepare($update_sql);
-                $stmt->bind_param("sii", $current_datetime, $company_id, $habit_type_id);
+                $stmt->bind_param("si", $current_datetime, $habit_type_id);
                 $stmt->execute();
-                error_log("Weekly company habit reset for company_id: $company_id, habit_type_id: $habit_type_id");
+                error_log("Weekly company habit reset for company: habit_type_id: $habit_type_id");
             }
         } elseif ($time_frame == 'Monthly') {
             if ($current_day_of_month == 1 && $current_day != date('Y-m-d', strtotime($last_updated))) {
-                $update_sql = "UPDATE company_habits SET progress = 0, last_updated = ? WHERE company_id = ? AND habit_type_id = ?";
+                $update_sql = "UPDATE company_habits SET progress = 0, last_updated = ? WHERE habit_type_id = ?";
                 $stmt = $conn->prepare($update_sql);
-                $stmt->bind_param("sii", $current_datetime, $company_id, $habit_type_id);
+                $stmt->bind_param("si", $current_datetime, $habit_type_id);
                 $stmt->execute();
-                error_log("Monthly company habit reset for company_id: $company_id, habit_type_id: $habit_type_id");
+                error_log("Monthly company habit reset for company: habit_type_id: $habit_type_id");
             }
         }
     }

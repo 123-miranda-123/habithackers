@@ -86,6 +86,7 @@ function validatePassword($password) {
     <title>User Profile</title>
     <link href="styles/login.css" rel="stylesheet" type="text/css"/>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
         button {
             font-family: 'Lexend';
@@ -135,6 +136,21 @@ function validatePassword($password) {
 
         .delete-button:hover {
             background-color: darkred;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+        }
+        p {
+            font-family: "Poppins", serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        label {
+            font-family: "Poppins", serif;
+            font-weight: 600;
+            font-style: normal;
         }
     </style>
 </head>
