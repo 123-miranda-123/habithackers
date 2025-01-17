@@ -204,6 +204,13 @@ table {
     text-align: left;
     border: 1px solid #ddd;
   }
+
+  .type {
+    background-color: #007bff;
+  }
+  .timeframe {
+    background-color: #7fb8f9;
+  }
   
   /* Data rows */
   table td {

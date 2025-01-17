@@ -196,7 +196,22 @@ if ($result->num_rows > 0) {
                 $company_stmt->bind_param("s", $habit_name);
                 $company_stmt->execute();
                 $company_goal_result = $company_stmt->get_result();
-                $company_goal = ($company_goal_result->num_rows > 0) ? $company_goal_result->fetch_assoc()['goal'] : null;
+                if ($company_goal_result->num_rows > 0) {
+                    $company_goal_row = $company_goal_result->fetch_assoc();
+                    $company_goal = $company_goal_row['goal'];
+        
+                    if ($company_goal_row['progress'] != null) {
+                    $company_progress = $company_goal_row['progress'];
+                    }
+        
+                    if ($company_goal_row['time_frame'] != null) {
+                        $company_time_frame = $company_goal_row['time_frame'];
+                    }
+                } else {
+                    $company_goal = null;
+                    $company_progress = null;
+                    $company_time_frame = null;
+                }
 
                 $progress_percentage = ($row['progress'] / $row['goal']) * 100;
                 $progress_percentage = min(100, $progress_percentage); 
@@ -210,7 +225,16 @@ if ($result->num_rows > 0) {
                         " . $row['progress'] . " " . $row['unit'] . " / " . $row['goal'] . " " . $row['unit'] . "
                       </td>";
                 echo "<td>" . $row['time_frame'] . "</td>";
-                echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
+                if ($company_goal != null) {
+                echo "<td>
+                        <div class='progress-bar'>
+                            <div class='progress' style='width: " . $progress_percentage_company . "%;'></div>
+                        </div>
+                        " . $company_progress . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . " (" . $company_time_frame . ")" . "
+                    </td>";
+                } else {
+                    echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
+                }
                 echo "<td>
                         <button id='set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
                         <button id='delete-goal'><a href='delete-goal.php?habit_type_id=" . $row['habit_type_id'] . "'>Delete</a></button>

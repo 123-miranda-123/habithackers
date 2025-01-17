@@ -116,7 +116,7 @@ if ($result->num_rows > 0) {
         $unit = $row['unit'];
 
         // Fetch team goal
-        $team_goal_sql = "SELECT goal, progress FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
+        $team_goal_sql = "SELECT goal, progress, time_frame FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
         WHERE habit_name = ? AND team_id = ?";
         $team_stmt = $conn->prepare($team_goal_sql);
         $team_stmt->bind_param("si", $habit_name, $team_id); 
@@ -129,14 +129,18 @@ if ($result->num_rows > 0) {
             if ($team_goal_row['progress'] != null) {
                 $team_progress = $team_goal_row['progress'];
             }
+            if ($team_goal_row['time_frame'] != null) {
+            $team_time_frame = $team_goal_row['time_frame'];
+            }
         } else {
             $team_goal = null;
             $team_progress = null;
+            $team_time_frame = null;
         }
         
 
         // Fetch company goal
-        $company_goal_sql = "SELECT goal, progress FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
+        $company_goal_sql = "SELECT goal, progress, time_frame FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
         $company_stmt = $conn->prepare($company_goal_sql);
         $company_stmt->bind_param("s", $habit_name);
         $company_stmt->execute();
@@ -148,8 +152,14 @@ if ($result->num_rows > 0) {
             if ($company_goal_row['progress'] != null) {
             $company_progress = $company_goal_row['progress'];
             }
+
+            if ($company_goal_row['time_frame'] != null) {
+                $company_time_frame = $company_goal_row['time_frame'];
+            }
         } else {
             $company_goal = null;
+            $company_progress = null;
+            $company_time_frame = null;
         }
     
         $progress_percentage_user = ($row['progress'] / $row['goal']) * 100;
@@ -181,23 +191,21 @@ if ($result->num_rows > 0) {
                     <div class='progress-bar'>
                         <div class='progress' style='width: " . $progress_percentage_team . "%;'></div>
                     </div>
-                    " . $team_progress . " " . $row['unit'] . " / " . $team_goal . " " . $row['unit'] . "
+                    " . $team_progress . " " . $row['unit'] . " / " . $team_goal . " " . $row['unit'] . " (" . $team_time_frame . ")" . "
                 </td>";
         } else {
         echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
         }
-
         if ($company_goal != null) {
             echo "<td>
                     <div class='progress-bar'>
                         <div class='progress' style='width: " . $progress_percentage_company . "%;'></div>
                     </div>
-                    " . $company_progress . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . "
+                    " . $company_progress . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . " (" . $company_time_frame . ")" . "
                 </td>";
         } else {
             echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
         }
-        
         echo "<td>
                 <button id = 'set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
                 <button id = 'enter-progress' class='open-btn' onclick='openPopup3(".$row['habit_type_id'].")'>Enter Progress</button>
