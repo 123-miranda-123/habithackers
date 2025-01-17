@@ -12,6 +12,7 @@ if (!isset($_GET["type_id"])) {
     exit();
 }
 
+$user_id = $_SESSION['user_id'];
 
 $sql = "SELECT id FROM teams WHERE captain_id = ?";
 $stmt = $conn->prepare($sql);
@@ -40,9 +41,6 @@ if ($result->num_rows > 0) {
     // User is not part of any team
     $team_name = "No team created yet.";
 }
-
-
-$user_id = $_SESSION['user_id'];
 
 // Handle form submission
 if (isset($_POST['submit'])) {
