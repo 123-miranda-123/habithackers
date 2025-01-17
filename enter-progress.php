@@ -29,7 +29,8 @@ if (isset($_POST['submit'])) {
         $habit_type_id = $_GET['type_id'];
     } else {
         // Handle error or invalid input
-        exit("Invalid habit type.");
+        header("Location:member-dashboard.php?error=Invalid Input");
+        exit();
     }
     
     if ($progress <= 0) {
