@@ -116,27 +116,38 @@ if ($result->num_rows > 0) {
         $unit = $row['unit'];
 
         // Fetch team goal
-        $team_goal_sql = "SELECT goal FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
+        $team_goal_sql = "SELECT goal, progress FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
         WHERE habit_name = ? AND team_id = ?";
         $team_stmt = $conn->prepare($team_goal_sql);
         $team_stmt->bind_param("si", $habit_name, $team_id); 
         $team_stmt->execute();
         $team_goal_result = $team_stmt->get_result();
         if ($team_goal_result->num_rows > 0) {
-            $team_goal = $team_goal_result->fetch_assoc()['goal'];
+            $team_goal_row = $team_goal_result->fetch_assoc();
+            $team_goal= $team_goal_row['goal'];
+
+            if ($team_goal_row['progress'] != null) {
+                $team_progress = $team_goal_row['progress'];
+            }
         } else {
             $team_goal = null;
+            $team_progress = null;
         }
         
 
         // Fetch company goal
-        $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
+        $company_goal_sql = "SELECT goal, progress FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
         $company_stmt = $conn->prepare($company_goal_sql);
         $company_stmt->bind_param("s", $habit_name);
         $company_stmt->execute();
         $company_goal_result = $company_stmt->get_result();
         if ($company_goal_result->num_rows > 0) {
-            $company_goal = $company_goal_result->fetch_assoc()['goal'];
+            $company_goal_row = $company_goal_result->fetch_assoc();
+            $company_goal = $company_goal_row['goal'];
+
+            if ($company_goal_row['progress'] != null) {
+            $company_progress = $company_goal_row['progress'];
+            }
         } else {
             $company_goal = null;
         }
@@ -145,12 +156,12 @@ if ($result->num_rows > 0) {
         $progress_percentage_user = min(100, $progress_percentage_user); // Make sure it doesn't exceed 100%
 
         if ($team_goal != 0) {
-        $progress_percentage_team = ($row['progress'] / $team_goal) * 100;
+        $progress_percentage_team = ($team_progress / $team_goal) * 100;
         $progress_percentage_team = min(100, $progress_percentage_team); // Make sure it doesn't exceed 100%
         }
 
         if ($company_goal != 0) {
-        $progress_percentage_company = ($row['progress'] / $team_goal) * 100;
+        $progress_percentage_company = ($company_progress / $team_goal) * 100;
         $progress_percentage_company = min(100, $progress_percentage_company); // Make sure it doesn't exceed 100%
         }
 
@@ -170,7 +181,7 @@ if ($result->num_rows > 0) {
                     <div class='progress-bar'>
                         <div class='progress' style='width: " . $progress_percentage_team . "%;'></div>
                     </div>
-                    " . $row['progress'] . " " . $row['unit'] . " / " . $team_goal . " " . $row['unit'] . "
+                    " . $team_progress . " " . $row['unit'] . " / " . $team_goal . " " . $row['unit'] . "
                 </td>";
         } else {
         echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
@@ -181,7 +192,7 @@ if ($result->num_rows > 0) {
                     <div class='progress-bar'>
                         <div class='progress' style='width: " . $progress_percentage_company . "%;'></div>
                     </div>
-                    " . $row['progress'] . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . "
+                    " . $company_progress . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . "
                 </td>";
         } else {
             echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
