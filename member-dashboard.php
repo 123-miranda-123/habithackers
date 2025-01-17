@@ -71,6 +71,7 @@ if ($result->num_rows > 0) {
             <div class="auth-buttons">
                 <a href ="leaderboard.php" id="leaderboard">Leaderboard</a>
                 <a href="help.html" id="help">Help</a>
+                <a href="user-profile.php" id="user-profile" class="user-profile-link">User Profile</a>
                 <a href="logout.php" id="logout">Logout</a>
             </div>
         </div>

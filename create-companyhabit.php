@@ -18,7 +18,7 @@ if (isset($_POST['submit'])) {
     $time_frame = $_POST['time-interval'];
 
     if ($goal <= 0) {
-        header("Location: member-dashboard.php?error=Invalid goal value.");
+        header("Location: admin-dashboard.php?error=Invalid goal value.");
         exit();
     }
     
@@ -39,35 +39,34 @@ if (isset($_POST['submit'])) {
         exit();
     }
 
-    $sql = "SELECT habit_type_id FROM team_habits WHERE team_id = ?";
+    $sql = "SELECT habit_type_id FROM company_habits";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $team_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             if ($row['habit_type_id'] == $habit_type_id) {
-                // Redirect back to the member dashboard if habit already exists
-                header("Location: member-dashboard.php?error=Habit already exists.");
+                // Redirect back to the admin dashboard if habit already exists
+                header("Location: admin-dashboard.php?error=Habit already exists.");
                 exit();
             }
         }
     }
 
-    // Insert new habit into user_habits table
-    $sql_insert = "INSERT INTO team_habits (team_id, habit_type_id, time_frame, goal, progress, last_updated) 
-                   VALUES (?, ?, ?, ?, 0, NOW())"; // Initial progress is set to 0
+    // Insert new habit into company_habits table
+    $sql_insert = "INSERT INTO company_habits (habit_type_id, time_frame, goal, progress, last_updated) 
+                   VALUES (?, ?, ?, 0, NOW())"; // Initial progress is set to 0
     $stmt_insert = $conn->prepare($sql_insert);
-    $stmt_insert->bind_param("iiss", $team_id, $habit_type_id, $time_frame, $goal);
+    $stmt_insert->bind_param("iss", $habit_type_id, $time_frame, $goal);
     
     if ($stmt_insert->execute()) {
-        // Redirect to the member dashboard after successful habit creation
-        header("Location: captain-dashboard.php");
+        // Redirect to the admin dashboard after successful habit creation
+        header("Location: admin-dashboard.php");
         exit();
     } else {
         // Handle error during insertion
-        echo "Error: Could not create team habit.";
+        echo "Error: Could not create company habit.";
     }
 }
 ?>
