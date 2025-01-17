@@ -116,41 +116,62 @@ if ($result->num_rows > 0) {
         $unit = $row['unit'];
 
         // Fetch team goal
-        $team_goal_sql = "SELECT goal FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
+        $team_goal_sql = "SELECT goal, progress, time_frame FROM team_habits JOIN habit_types ON team_habits.habit_type_id = habit_types.id
         WHERE habit_name = ? AND team_id = ?";
         $team_stmt = $conn->prepare($team_goal_sql);
         $team_stmt->bind_param("si", $habit_name, $team_id); 
         $team_stmt->execute();
         $team_goal_result = $team_stmt->get_result();
         if ($team_goal_result->num_rows > 0) {
-            $team_goal = $team_goal_result->fetch_assoc()['goal'];
+            $team_goal_row = $team_goal_result->fetch_assoc();
+            $team_goal= $team_goal_row['goal'];
+
+            if ($team_goal_row['progress'] != null) {
+                $team_progress = $team_goal_row['progress'];
+            }
+            if ($team_goal_row['time_frame'] != null) {
+            $team_time_frame = $team_goal_row['time_frame'];
+            }
         } else {
             $team_goal = null;
+            $team_progress = null;
+            $team_time_frame = null;
         }
         
 
         // Fetch company goal
-        $company_goal_sql = "SELECT goal FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
+        $company_goal_sql = "SELECT goal, progress, time_frame FROM company_habits JOIN habit_types ON company_habits.habit_type_id = habit_types.id WHERE habit_name = ?";
         $company_stmt = $conn->prepare($company_goal_sql);
         $company_stmt->bind_param("s", $habit_name);
         $company_stmt->execute();
         $company_goal_result = $company_stmt->get_result();
         if ($company_goal_result->num_rows > 0) {
-            $company_goal = $company_goal_result->fetch_assoc()['goal'];
+            $company_goal_row = $company_goal_result->fetch_assoc();
+            $company_goal = $company_goal_row['goal'];
+
+            if ($company_goal_row['progress'] != null) {
+            $company_progress = $company_goal_row['progress'];
+            }
+
+            if ($company_goal_row['time_frame'] != null) {
+                $company_time_frame = $company_goal_row['time_frame'];
+            }
         } else {
             $company_goal = null;
+            $company_progress = null;
+            $company_time_frame = null;
         }
     
         $progress_percentage_user = ($row['progress'] / $row['goal']) * 100;
         $progress_percentage_user = min(100, $progress_percentage_user); // Make sure it doesn't exceed 100%
 
         if ($team_goal != 0) {
-        $progress_percentage_team = ($row['progress'] / $team_goal) * 100;
+        $progress_percentage_team = ($team_progress / $team_goal) * 100;
         $progress_percentage_team = min(100, $progress_percentage_team); // Make sure it doesn't exceed 100%
         }
 
         if ($company_goal != 0) {
-        $progress_percentage_company = ($row['progress'] / $team_goal) * 100;
+        $progress_percentage_company = ($company_progress / $team_goal) * 100;
         $progress_percentage_company = min(100, $progress_percentage_company); // Make sure it doesn't exceed 100%
         }
 
@@ -170,23 +191,21 @@ if ($result->num_rows > 0) {
                     <div class='progress-bar'>
                         <div class='progress' style='width: " . $progress_percentage_team . "%;'></div>
                     </div>
-                    " . $row['progress'] . " " . $row['unit'] . " / " . $team_goal . " " . $row['unit'] . "
+                    " . $team_progress . " " . $row['unit'] . " / " . $team_goal . " " . $row['unit'] . " (" . $team_time_frame . ")" . "
                 </td>";
         } else {
         echo "<td>" . ($team_goal ? $team_goal . " " . $unit : "Not set") . "</td>";
         }
-
         if ($company_goal != null) {
             echo "<td>
                     <div class='progress-bar'>
                         <div class='progress' style='width: " . $progress_percentage_company . "%;'></div>
                     </div>
-                    " . $row['progress'] . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . "
+                    " . $company_progress . " " . $row['unit'] . " / " . $company_goal . " " . $row['unit'] . " (" . $company_time_frame . ")" . "
                 </td>";
         } else {
             echo "<td>" . ($company_goal ? $company_goal . " " . $unit : "Not set") . "</td>";
         }
-        
         echo "<td>
                 <button id = 'set-goal' class='open-btn' onclick='openPopup2(".$row['habit_type_id'].")'>Update Goal</button>
                 <button id = 'enter-progress' class='open-btn' onclick='openPopup3(".$row['habit_type_id'].")'>Enter Progress</button>
@@ -290,13 +309,15 @@ $result_habit_type = $conn->query($sql_habit_type);
     </div>
     </div>
 
+<b></b>
 <h2>Your Progress Visualization</h2>
 
 <div id="charts-container">
 <?php
 // Query to aggregate progress by date for each user and habit type
-$sql = "SELECT user_id, habit_type_id, DATE(timestamp) as date, SUM(progress) as total_progress
+$sql = "SELECT user_id, habit_type_id, habit_types.habit_name, habit_types.unit,  DATE(timestamp) as date, SUM(progress) as total_progress
     FROM user_habit_progress
+    INNER JOIN habit_types ON user_habit_progress.habit_type_id = habit_types.id
     WHERE user_id = ? 
     GROUP BY user_id, habit_type_id, DATE(timestamp)
     ORDER BY DATE(timestamp)
@@ -313,7 +334,9 @@ while ($row = $result->fetch_assoc()) {
     $habit_type_id = $row['habit_type_id'];
     $date = $row['date'];
     $total_progress = $row['total_progress'];
-
+    $habit_name = $row['habit_name'];
+    $unit = $row['unit'];
+ 
     // Format the data into a structure where habit_type_id is the key
     if (!isset($data[$habit_type_id])) {
         $data[$habit_type_id] = [];
@@ -321,11 +344,94 @@ while ($row = $result->fetch_assoc()) {
 
     $data[$habit_type_id][] = [
         'date' => $date,
-        'progress' => $total_progress
+        'progress' => $total_progress,
+        'habit_name' => $habit_name,
+        'unit'=> $unit
     ];
 }
 ?>
 </div>
+
+<script>
+var habitData = <?php echo json_encode($data); ?>;
+
+    const colors = {
+        1: 'rgba(255, 99, 132, 0.6)',   // Red
+        2: 'rgba(54, 162, 235, 0.6)',   // Blue
+        3: 'rgba(75, 192, 192, 0.6)',   // Green
+        4: 'rgba(153, 102, 255, 0.6)',  // Purple
+        5: 'rgba(255, 159, 64, 0.6)',   // Orange
+        6: 'rgba(255, 205, 86, 0.6)',   // Yellow
+        7: 'rgba(156, 39, 176, 0.6)',   // Pink
+        8: 'rgba(0, 123, 255, 0.6)'     // Blue
+    };
+
+window.onload = function () {
+    // Loop through each habit_type_id and create a chart
+    Object.keys(habitData).forEach((habitTypeId) => {
+        const habitDataArray = habitData[habitTypeId];
+
+        // Extract dates, progress values, unit, and habit name
+        const labels = habitDataArray.map((entry) => entry.date);
+        const progressValues = habitDataArray.map((entry) => entry.progress);
+        const unit = habitDataArray[0].unit;
+        const habitName = habitDataArray[0].habit_name;
+
+        // Create a new canvas for each habit type chart
+        const canvasId = `chart-habit-${habitTypeId}`;
+        const canvas = document.createElement("canvas");
+        canvas.id = canvasId;
+
+        const chartColor = colors[habitTypeId]
+
+        // Append to the charts-container div
+        document.getElementById('charts-container').appendChild(canvas);
+
+        // Chart.js configuration for each habit
+        const ctx = document.getElementById(canvasId).getContext("2d");
+        const chart = new Chart(ctx, {
+            type: "bar", // Change to "bar" if you prefer a bar chart
+            data: {
+                labels: labels, // X-axis (dates)
+                datasets: [{
+                    label: `Progress for ${habitName} (${unit})` ,  // Customize label with habit name
+                    data: progressValues, // Y-axis (progress values)
+                    backgroundColor: chartColor, // Bar color
+                    borderColor: chartColor.replace('0.6', '1'),  // Border color
+                    tension: 0.1,  // Smoothness of the line
+                    borderWidth: 2  // Line width
+                }]
+            },
+            options: {
+                responsive: true,  // Make the chart responsive
+                plugins: {
+                    legend: {
+                        display: true,
+                    },
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date',  // X-axis title
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: `${unit}` // Y-axis title
+                        }
+                    },
+                },
+            }
+        });
+    });
+}
+
+</script>
+
+
   <script>
     <?php
       if (isset($_GET["type_id"]) && isset($_GET["action"])) {
@@ -373,72 +479,6 @@ while ($row = $result->fetch_assoc()) {
       window.location.href = 'member-dashboard.php';
     }
   </script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-var habitData = <?php echo json_encode($data); ?>;
-
-window.onload = function () {
-    // Loop through each habit_type_id and create a chart
-    Object.keys(habitData).forEach((habitTypeId) => {
-        const habitDataArray = habitData[habitTypeId];
-
-        // Extract dates and progress values
-        const labels = habitDataArray.map((entry) => entry.date);
-        const progressValues = habitDataArray.map((entry) => entry.progress);
-
-        // Create a new canvas for each habit type chart
-        const canvasId = `chart-habit-${habitTypeId}`;
-        const canvas = document.createElement("canvas");
-        canvas.id = canvasId;
-
-        // Append to the charts-container div
-        document.getElementById('charts-container').appendChild(canvas);
-
-        // Chart.js configuration for each habit
-        const ctx = document.getElementById(canvasId).getContext("2d");
-        new Chart(ctx, {
-            type: "bar", // Change to "bar" if you prefer a bar chart
-            data: {
-                labels: labels, // X-axis (dates)
-                datasets: [{
-                    label: `Progress for Habit ${habitTypeId}`,  // Customize label
-                    data: progressValues, // Y-axis (progress values)
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)', // Bar color
-                    borderColor: 'rgba(54, 162, 235, 1)',  // Border color
-                    tension: 0.1,  // Smoothness of the line
-                    borderWidth: 2  // Line width
-                }]
-            },
-            options: {
-                responsive: true,  // Make the chart responsive
-                plugins: {
-                    legend: {
-                        display: true,
-                    },
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Date',  // X-axis title
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,  // Start Y-axis from zero
-                        title: {
-                            display: true,
-                            text: 'Progress',  // Y-axis title
-                        }
-                    },
-                },
-            }
-        });
-    });
-}
-</script>
-</script>
 
 </body>
 </html>
