@@ -151,7 +151,7 @@ while ($row = $result->fetch_assoc()) {
 }
 
 // Step 4: Sort users by their scores in ascending order
-arsort($users);
+arsort($teams);
 echo "<h2>Team Leaderboard</h2>";
 echo "<table>";
 echo "<tr><th>Rank</th><th>Team</th><th>Total Points</th></tr>";

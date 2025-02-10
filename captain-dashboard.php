@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once("database.php");
+require_once "database.php";
 require_once "reset-progress.php";
 
 // Call the reset function when the page loads
@@ -46,9 +46,6 @@ if ($result->num_rows > 0) {
         $team_data = $result_team->fetch_assoc();
         $team_name = $team_data['name'];
     }
-
-    $user_id = $_SESSION['user_id'];
-    $user_name = $_SESSION['user_name'];
 
 
     $sql = "SELECT id FROM teams WHERE captain_id = ?";
@@ -141,12 +138,22 @@ if ($result->num_rows > 0) {
                 <th>Actions</th>
             </tr>
         <?php
-            $sql = "SELECT * FROM team_members JOIN users ON team_members.user_id = users.id";
-            $result = $conn->query($sql);
-            if (!$result) {
+            $sql = "SELECT * FROM team_members 
+            JOIN users ON team_members.user_id = users.id 
+            JOIN teams ON team_members.team_id = teams.id 
+            WHERE team_members.team_id = ?";
+
+            $stmt = $conn->prepare($sql);
+            if (!$stmt) {
                 echo "Invalid query: " . $conn->error;
                 exit();
             }
+
+            $stmt->bind_param("i", $team_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+
             while ($row = $result->fetch_assoc()) {
                 echo "
                 <tr> 

@@ -53,6 +53,7 @@ function reset_user_habits($current_day, $current_day_of_week, $current_day_of_m
         } elseif ($time_frame === 'Monthly' && $current_day_of_month == 1 && $last_updated_date !== $current_day) {
             $should_reset = true;
         }
+        
 
         
         if ($should_reset) {
@@ -128,7 +129,7 @@ function reset_company_habits($current_day, $current_day_of_week, $current_day_o
         $last_updated = $row['last_updated'];
 
         error_log("Checking company habit for habit_type_id: $habit_type_id, time_frame: $time_frame, last_updated: $last_updated");
-
+        
         if ($time_frame == 'Daily') {
             if ($current_day != date('Y-m-d', strtotime($last_updated))) {
                 $update_sql = "UPDATE company_habits SET progress = 0, last_updated = ? WHERE habit_type_id = ?";
